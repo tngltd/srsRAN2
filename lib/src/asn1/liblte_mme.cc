@@ -2030,7 +2030,7 @@ LIBLTE_ERROR_ENUM liblte_mme_unpack_network_name_ie(uint8** ie_ptr, LIBLTE_MME_N
   uint32            byte_offset;
   uint32            N_bytes;
   uint8             spare_field;
-  char              tmp_char;
+  char              tmp_char = 0;
   uint32            str_cnt;
 
   if (ie_ptr != NULL && net_name != NULL) {
