@@ -22,6 +22,7 @@
 #ifndef SRSRAN_RRC_NR_CONFIG_H
 #define SRSRAN_RRC_NR_CONFIG_H
 
+#include <cstdint>
 #include <string>
 #include <vector>
 

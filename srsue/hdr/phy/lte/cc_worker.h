@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_LTE_CC_WORKER_H
 #define SRSUE_LTE_CC_WORKER_H
+#include <cstdint>
 
 #include "srsran/interfaces/ue_interfaces.h"
 #include "srsran/srsran.h"

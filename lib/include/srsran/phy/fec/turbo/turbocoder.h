@@ -32,6 +32,7 @@
 
 #ifndef SRSRAN_TURBOCODER_H
 #define SRSRAN_TURBOCODER_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/fec/crc.h"

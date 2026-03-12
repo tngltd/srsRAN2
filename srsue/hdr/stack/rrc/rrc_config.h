@@ -22,6 +22,11 @@
 #ifndef SRSRAN_RRC_CONFIG_H
 #define SRSRAN_RRC_CONFIG_H
 
+#include <array>
+#include <cstdint>
+#include <string>
+#include <vector>
+
 namespace srsue {
 
 #define SRSRAN_RRC_N_BANDS 43

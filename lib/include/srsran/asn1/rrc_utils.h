@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_RRC_UTILS_H
 #define SRSRAN_RRC_UTILS_H
+#include <cstdint>
 
 #include "srsenb/hdr/stack/mac/sched_interface.h"
 #include "srsran/interfaces/mac_interface_types.h"

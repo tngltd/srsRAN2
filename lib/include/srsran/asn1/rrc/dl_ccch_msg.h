@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_RRC_DLCCCH_MSG_H
 #define SRSASN1_RRC_DLCCCH_MSG_H
+#include <cstdint>
 
 #include "meascfg.h"
 #include "rr_ded.h"

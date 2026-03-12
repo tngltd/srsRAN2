@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_NAS_PCAP_H
 #define SRSRAN_NAS_PCAP_H
+#include <cstdint>
 
 #include "srsran/common/common.h"
 #include "srsran/common/pcap.h"

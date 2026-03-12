@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_RX_SOCKET_HANDLER_H
 #define SRSRAN_RX_SOCKET_HANDLER_H
+#include <cstdint>
 
 #include "srsran/common/buffer_pool.h"
 #include "srsran/common/multiqueue.h"

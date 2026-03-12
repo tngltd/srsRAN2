@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_RLC_AM_LTE_H
 #define SRSRAN_RLC_AM_LTE_H
+#include <cstdint>
 
 #include "srsran/adt/accumulators.h"
 #include "srsran/adt/circular_array.h"

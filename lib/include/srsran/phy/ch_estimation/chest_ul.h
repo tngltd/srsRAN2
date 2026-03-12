@@ -33,6 +33,7 @@
 
 #ifndef SRSRAN_CHEST_UL_H
 #define SRSRAN_CHEST_UL_H
+#include <cstdint>
 
 #include <stdio.h>
 

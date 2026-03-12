@@ -27,6 +27,7 @@
 
 #ifndef SRSRAN_MULTIQUEUE_H
 #define SRSRAN_MULTIQUEUE_H
+#include <cstdint>
 
 #include "srsran/adt/circular_buffer.h"
 #include "srsran/adt/move_callback.h"

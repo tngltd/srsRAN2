@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_CHEST_SL_H
 #define SRSRAN_CHEST_SL_H
+#include <cstdint>
 
 #include <stdio.h>
 

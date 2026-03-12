@@ -36,6 +36,7 @@
 
 #ifndef SRSRAN_RADIO_H
 #define SRSRAN_RADIO_H
+#include <cstdint>
 
 namespace srsran {
 

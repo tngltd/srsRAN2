@@ -28,6 +28,7 @@
 
 #ifndef SRSRAN_RRC_PROCEDURES_H
 #define SRSRAN_RRC_PROCEDURES_H
+#include <cstdint>
 
 namespace srsue {
 

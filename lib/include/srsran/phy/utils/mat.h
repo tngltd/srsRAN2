@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_MAT_H
 #define SRSRAN_MAT_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/utils/simd.h"

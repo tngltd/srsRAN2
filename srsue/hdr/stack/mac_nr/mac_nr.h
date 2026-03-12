@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_MAC_NR_H
 #define SRSUE_MAC_NR_H
+#include <cstdint>
 
 #include "dl_harq_nr.h"
 #include "mac_nr_interfaces.h"

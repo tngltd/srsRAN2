@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_GNB_MAC_INTERFACES_H
 #define SRSRAN_GNB_MAC_INTERFACES_H
+#include <cstdint>
 
 #include "srsenb/hdr/stack/mac/nr/sched_nr_interface.h"
 

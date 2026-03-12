@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_TEST_PCAP_H
 #define SRSRAN_TEST_PCAP_H
+#include <cstdint>
 
 /**
  * @brief Helper class for tests that wish to dump RRC, PDCP or MAC SDUs into PCAP files in order to inspect them with

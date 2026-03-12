@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_RRC_H
 #define SRSASN1_RRC_H
+#include <cstdint>
 
 #include "rrc_asn1_bcch_msg.h"
 #include "rrc_asn1_dl_ccch_msg.h"

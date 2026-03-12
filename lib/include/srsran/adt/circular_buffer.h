@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_CIRCULAR_BUFFER_H
 #define SRSRAN_CIRCULAR_BUFFER_H
+#include <cstdint>
 
 #include "srsran/adt/detail/type_storage.h"
 #include "srsran/adt/expected.h"

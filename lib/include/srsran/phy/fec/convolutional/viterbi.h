@@ -30,6 +30,7 @@
 
 #ifndef SRSRAN_VITERBI_H
 #define SRSRAN_VITERBI_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include <stdbool.h>

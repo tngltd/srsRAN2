@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_ENB_RLC_INTERFACES_H
 #define SRSRAN_ENB_RLC_INTERFACES_H
+#include <cstdint>
 
 #include "srsran/common/byte_buffer.h"
 #include "srsran/interfaces/rlc_interface_types.h"

@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_PDCP_ENTITY_LTE_H
 #define SRSRAN_PDCP_ENTITY_LTE_H
+#include <cstdint>
 
 #include "srsran/adt/circular_array.h"
 #include "srsran/common/buffer_pool.h"

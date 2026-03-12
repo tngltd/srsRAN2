@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_HARQ_ACK_H
 #define SRSRAN_HARQ_ACK_H
+#include <cstdint>
 
 #include "srsran/phy/phch/dci_nr.h"
 #include "srsran/phy/phch/harq_ack_cfg.h"

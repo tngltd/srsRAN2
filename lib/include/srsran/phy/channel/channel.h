@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_CHANNEL_H
 #define SRSRAN_CHANNEL_H
+#include <cstdint>
 
 #include "ch_awgn.h"
 #include "delay.h"

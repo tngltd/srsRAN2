@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_PCSC_USIM_H
 #define SRSUE_PCSC_USIM_H
+#include <cstdint>
 
 #include "srsran/common/common.h"
 #include "srsran/common/security.h"

@@ -29,6 +29,7 @@
 
 #ifndef SRSRAN_SCH_H
 #define SRSRAN_SCH_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/common/phy_common.h"

@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_RLC_METRICS_H
 #define SRSRAN_RLC_METRICS_H
+#include <cstdint>
 
 #include "srsran/common/common.h"
 #include <iostream>

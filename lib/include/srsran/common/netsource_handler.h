@@ -26,6 +26,7 @@
 
 #ifndef SRSRAN_NETSOURE_HANDLER_H
 #define SRSRAN_NETSOURE_HANDLER_H
+#include <cstdint>
 
 #include "srsran/common/threads.h"
 #include "srsran/phy/io/netsource.h"

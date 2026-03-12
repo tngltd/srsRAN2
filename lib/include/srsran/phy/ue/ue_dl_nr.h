@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_UE_DL_NR_H
 #define SRSRAN_UE_DL_NR_H
+#include <cstdint>
 
 #include "srsran/phy/ch_estimation/csi_rs.h"
 #include "srsran/phy/ch_estimation/dmrs_pdcch.h"

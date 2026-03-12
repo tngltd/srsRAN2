@@ -29,6 +29,7 @@
 
 #ifndef SRSRAN_PDCCH_NR_H
 #define SRSRAN_PDCCH_NR_H
+#include <cstdint>
 
 #include "dci_nr.h"
 #include "srsran/phy/ch_estimation/dmrs_pdcch.h"

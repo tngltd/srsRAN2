@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_GNB_NGAP_INTERFACES_H
 #define SRSRAN_GNB_NGAP_INTERFACES_H
+#include <cstdint>
 
 #include "srsran/asn1/ngap_utils.h"
 

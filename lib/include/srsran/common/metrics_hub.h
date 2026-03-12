@@ -27,6 +27,7 @@
 
 #ifndef SRSRAN_METRICS_HUB_H
 #define SRSRAN_METRICS_HUB_H
+#include <cstdint>
 
 #include "srsran/common/threads.h"
 #include <chrono>

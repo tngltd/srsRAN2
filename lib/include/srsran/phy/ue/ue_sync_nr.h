@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_UE_SYNC_NR_H
 #define SRSRAN_UE_SYNC_NR_H
+#include <cstdint>
 
 #include "srsran/phy/common/timestamp.h"
 #include "srsran/phy/sync/ssb.h"

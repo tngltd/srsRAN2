@@ -24,6 +24,7 @@
 
 #ifndef SRSRAN_ENB_MAC_INTERFACES_H
 #define SRSRAN_ENB_MAC_INTERFACES_H
+#include <cstdint>
 
 namespace srsenb {
 

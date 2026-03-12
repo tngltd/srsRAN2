@@ -29,6 +29,7 @@
 
 #ifndef SRSRAN_CFO_H
 #define SRSRAN_CFO_H
+#include <cstdint>
 
 #include <complex.h>
 

@@ -39,6 +39,7 @@
 
 #ifndef SRSRAN_SYNC_H
 #define SRSRAN_SYNC_H
+#include <cstdint>
 
 #include <math.h>
 #include <stdbool.h>

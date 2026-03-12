@@ -20,6 +20,7 @@
  */
 #ifndef SRSRAN_GNB_RRC_NR_INTERFACES_H
 #define SRSRAN_GNB_RRC_NR_INTERFACES_H
+#include <cstdint>
 
 #include "srsenb/hdr/phy/phy_interfaces.h"
 #include "srsran/asn1/ngap.h"

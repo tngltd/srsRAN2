@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_NAS_METRICS_H
 #define SRSUE_NAS_METRICS_H
+#include <cstdint>
 
 #include "nas_emm_state.h"
 

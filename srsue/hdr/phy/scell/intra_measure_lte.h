@@ -20,6 +20,7 @@
  */
 #ifndef SRSRAN_INTRA_MEASURE_LTE_H
 #define SRSRAN_INTRA_MEASURE_LTE_H
+#include <cstdint>
 
 #include "intra_measure_base.h"
 #include "scell_recv.h"

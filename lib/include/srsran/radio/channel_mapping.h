@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_CHANNEL_MAPPING_H
 #define SRSRAN_CHANNEL_MAPPING_H
+#include <cstdint>
 
 #include <cinttypes>
 #include <list>

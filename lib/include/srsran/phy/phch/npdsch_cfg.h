@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_NPDSCH_CFG_H
 #define SRSRAN_NPDSCH_CFG_H
+#include <cstdint>
 
 #include "srsran/phy/phch/ra_nbiot.h"
 

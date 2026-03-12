@@ -37,6 +37,7 @@
 
 #ifndef SRSRAN_UE_CELL_SEARCH_H
 #define SRSRAN_UE_CELL_SEARCH_H
+#include <cstdint>
 
 #include <stdbool.h>
 

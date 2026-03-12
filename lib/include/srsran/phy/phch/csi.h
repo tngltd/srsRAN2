@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_CSI_NR_H
 #define SRSRAN_CSI_NR_H
+#include <cstdint>
 
 #include "uci_cfg_nr.h"
 

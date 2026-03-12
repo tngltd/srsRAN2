@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_SLIV_H
 #define SRSRAN_SLIV_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include <inttypes.h>

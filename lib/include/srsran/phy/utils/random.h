@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_RANDOM_H
 #define SRSRAN_RANDOM_H
+#include <cstdint>
 
 #include "srsran/config.h"
 

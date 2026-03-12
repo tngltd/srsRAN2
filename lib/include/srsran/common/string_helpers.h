@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_STRING_HELPERS_H
 #define SRSRAN_STRING_HELPERS_H
+#include <cstdint>
 
 #include "srsran/srslog/bundled/fmt/format.h"
 #include <algorithm>

@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_GTPC_IES_H
 #define SRSRAN_GTPC_IES_H
+#include <cstdint>
 
 #include "srsran/phy/io/netsource.h"
 

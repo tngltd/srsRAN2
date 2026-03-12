@@ -29,6 +29,7 @@
 
 #ifndef SRSRAN_PDSCH_CFG_H
 #define SRSRAN_PDSCH_CFG_H
+#include <cstdint>
 
 #include "srsran/phy/fec/cbsegm.h"
 #include "srsran/phy/fec/softbuffer.h"

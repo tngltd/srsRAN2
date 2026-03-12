@@ -36,6 +36,7 @@
 
 #ifndef SRSRAN_SYNC_NBIOT_H
 #define SRSRAN_SYNC_NBIOT_H
+#include <cstdint>
 
 #include <math.h>
 #include <stdbool.h>

@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_CHEST_DL_NBIOT_H
 #define SRSRAN_CHEST_DL_NBIOT_H
+#include <cstdint>
 
 #include <stdio.h>
 

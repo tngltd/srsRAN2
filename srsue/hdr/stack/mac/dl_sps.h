@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_DL_SPS_H
 #define SRSUE_DL_SPS_H
+#include <cstdint>
 
 #include "srsran/common/timers.h"
 

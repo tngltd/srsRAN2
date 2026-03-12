@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_RE_PATTERN_H
 #define SRSRAN_RE_PATTERN_H
+#include <cstdint>
 
 #include "../common/phy_common_nr.h"
 

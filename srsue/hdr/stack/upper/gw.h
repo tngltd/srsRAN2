@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_GW_H
 #define SRSUE_GW_H
+#include <cstdint>
 
 #include "gw_metrics.h"
 #include "srsran/common/buffer_pool.h"

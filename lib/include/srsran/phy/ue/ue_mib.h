@@ -40,6 +40,7 @@
 
 #ifndef SRSRAN_UE_MIB_H
 #define SRSRAN_UE_MIB_H
+#include <cstdint>
 
 #include <stdbool.h>
 

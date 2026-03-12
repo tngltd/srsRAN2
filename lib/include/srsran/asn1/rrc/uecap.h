@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_RRC_UECAP_H
 #define SRSASN1_RRC_UECAP_H
+#include <cstdint>
 
 #include "common.h"
 

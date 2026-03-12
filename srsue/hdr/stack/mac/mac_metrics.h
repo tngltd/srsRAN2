@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_MAC_METRICS_H
 #define SRSUE_MAC_METRICS_H
+#include <cstdint>
 
 namespace srsue {
 

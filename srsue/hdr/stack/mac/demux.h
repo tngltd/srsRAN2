@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_DEMUX_H
 #define SRSUE_DEMUX_H
+#include <cstdint>
 
 #include "srsran/common/timers.h"
 #include "srsran/interfaces/ue_mac_interfaces.h"

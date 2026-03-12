@@ -26,6 +26,7 @@
 
 #ifndef SRSRAN_COMMON_HELPER_H
 #define SRSRAN_COMMON_HELPER_H
+#include <cstdint>
 
 #include "srsran/srslog/srslog.h"
 #include <fstream>

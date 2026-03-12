@@ -13,6 +13,7 @@
 
 #ifndef SRSRAN_LIBLTE_SECURITY_H
 #define SRSRAN_LIBLTE_SECURITY_H
+#include <cstdint>
 
 /*******************************************************************************
                               INCLUDES

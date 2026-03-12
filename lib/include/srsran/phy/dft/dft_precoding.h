@@ -30,6 +30,7 @@
 
 #ifndef SRSRAN_DFT_PRECODING_H
 #define SRSRAN_DFT_PRECODING_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/common/phy_common.h"

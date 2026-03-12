@@ -29,6 +29,7 @@
 
 #ifndef SRSRAN_BYTE_BUFFERQUEUE_H
 #define SRSRAN_BYTE_BUFFERQUEUE_H
+#include <cstdint>
 
 #include "srsran/adt/circular_buffer.h"
 #include "srsran/common/block_queue.h"

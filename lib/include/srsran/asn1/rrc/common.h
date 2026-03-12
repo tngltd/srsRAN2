@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_RRC_COMMON_H
 #define SRSASN1_RRC_COMMON_H
+#include <cstdint>
 
 #include "srsran/asn1/asn1_utils.h"
 #include <cstdio>

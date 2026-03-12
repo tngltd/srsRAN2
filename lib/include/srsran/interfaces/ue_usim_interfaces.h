@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_UE_USIM_INTERFACES_H
 #define SRSRAN_UE_USIM_INTERFACES_H
+#include <cstdint>
 
 #include "rrc_interface_types.h"
 #include <string>

@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_STATE_H
 #define SRSRAN_STATE_H
+#include <cstdint>
 
 #include "../phy_metrics.h"
 #include "srsran/adt/circular_array.h"

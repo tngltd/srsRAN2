@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_UE_MAC_INTERFACES_H
 #define SRSRAN_UE_MAC_INTERFACES_H
+#include <cstdint>
 
 #include "mac_interface_types.h"
 

@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_RLC_UM_BASE_H
 #define SRSRAN_RLC_UM_BASE_H
+#include <cstdint>
 
 #include "srsran/adt/accumulators.h"
 #include "srsran/common/buffer_pool.h"

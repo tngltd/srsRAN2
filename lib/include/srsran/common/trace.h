@@ -27,6 +27,7 @@
 
 #ifndef SRSRAN_TRACE_H
 #define SRSRAN_TRACE_H
+#include <cstdint>
 
 #include <stdio.h>
 #include <string>

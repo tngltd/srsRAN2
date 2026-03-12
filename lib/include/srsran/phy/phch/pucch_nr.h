@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_PUCCH_NR_H
 #define SRSRAN_PUCCH_NR_H
+#include <cstdint>
 
 #include "srsran/phy/ch_estimation/chest_ul.h"
 #include "srsran/phy/common/phy_common_nr.h"

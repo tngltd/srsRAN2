@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_RRC_NR_H
 #define SRSASN1_RRC_NR_H
+#include <cstdint>
 
 #include "asn1_utils.h"
 #include <cstdio>

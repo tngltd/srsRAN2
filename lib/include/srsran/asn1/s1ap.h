@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_S1AP_H
 #define SRSASN1_S1AP_H
+#include <cstdint>
 
 #include "asn1_utils.h"
 #include <cstdio>

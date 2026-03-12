@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_PDCP_ENTITY_BASE_H
 #define SRSRAN_PDCP_ENTITY_BASE_H
+#include <cstdint>
 
 #include "srsran/adt/accumulators.h"
 #include "srsran/common/buffer_pool.h"

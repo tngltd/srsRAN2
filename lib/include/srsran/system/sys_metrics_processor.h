@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_SYS_METRICS_PROCESSOR_H
 #define SRSRAN_SYS_METRICS_PROCESSOR_H
+#include <cstdint>
 
 #include "srsran/srslog/logger.h"
 #include "srsran/system/sys_metrics.h"

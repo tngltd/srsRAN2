@@ -30,6 +30,7 @@
 
 #ifndef SRSRAN_RM_CONV_H
 #define SRSRAN_RM_CONV_H
+#include <cstdint>
 
 #include "srsran/config.h"
 

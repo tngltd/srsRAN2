@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_UE_NAS_INTERFACES_H
 #define SRSRAN_UE_NAS_INTERFACES_H
+#include <cstdint>
 
 #include "srsran/asn1/nas_5g_ies.h"
 #include "srsran/interfaces/rrc_interface_types.h"

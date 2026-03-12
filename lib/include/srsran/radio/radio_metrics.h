@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_RADIO_METRICS_H
 #define SRSRAN_RADIO_METRICS_H
+#include <cstdint>
 
 namespace srsran {
 

@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_RRC_MEASCFG_H
 #define SRSASN1_RRC_MEASCFG_H
+#include <cstdint>
 
 #include "common_ext.h"
 #include "rr_common.h"

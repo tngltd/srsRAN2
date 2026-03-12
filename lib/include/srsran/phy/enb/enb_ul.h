@@ -32,6 +32,7 @@
 
 #ifndef SRSRAN_ENB_UL_H
 #define SRSRAN_ENB_UL_H
+#include <cstdint>
 
 #include <stdbool.h>
 

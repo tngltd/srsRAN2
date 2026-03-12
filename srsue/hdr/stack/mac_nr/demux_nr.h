@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_DEMUX_NR_H
 #define SRSRAN_DEMUX_NR_H
+#include <cstdint>
 
 #include "mac_nr_interfaces.h"
 #include "srsran/common/block_queue.h"

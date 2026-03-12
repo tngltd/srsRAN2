@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_DMRS_PBCH_H
 #define SRSRAN_DMRS_PBCH_H
+#include <cstdint>
 
 #include "srsran/phy/common/phy_common_nr.h"
 

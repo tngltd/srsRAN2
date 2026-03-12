@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_DUMMY_CLASSES_H
 #define SRSUE_DUMMY_CLASSES_H
+#include <cstdint>
 
 #include "srsran/common/task_scheduler.h"
 #include "srsran/interfaces/phy_interface_types.h"

@@ -32,6 +32,7 @@
 
 #ifndef SRSRAN_UE_UL_H
 #define SRSRAN_UE_UL_H
+#include <cstdint>
 
 #include "srsran/phy/ch_estimation/chest_dl.h"
 #include "srsran/phy/ch_estimation/refsignal_ul.h"

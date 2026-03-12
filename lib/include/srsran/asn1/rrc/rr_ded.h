@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_RRC_RRCFG_H
 #define SRSASN1_RRC_RRCFG_H
+#include <cstdint>
 
 #include "phy_ded.h"
 #include "rr_common.h"

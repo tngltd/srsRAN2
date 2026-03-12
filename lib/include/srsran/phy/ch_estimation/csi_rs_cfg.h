@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_CSI_RS_CFG_H
 #define SRSRAN_CSI_RS_CFG_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/common/phy_common_nr.h"

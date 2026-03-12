@@ -24,6 +24,7 @@
 
 #ifndef SRSRAN_ENB_S1AP_INTERFACES_H
 #define SRSRAN_ENB_S1AP_INTERFACES_H
+#include <cstdint>
 
 namespace srsenb {
 

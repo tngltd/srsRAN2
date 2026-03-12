@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_SLOT_POINT_H
 #define SRSRAN_SLOT_POINT_H
+#include <cstdint>
 
 #include "srsran/adt/interval.h"
 #include "srsran/support/srsran_assert.h"

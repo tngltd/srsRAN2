@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_UE_GW_INTERFACES_H
 #define SRSRAN_UE_GW_INTERFACES_H
+#include <cstdint>
 
 #include "srsran/asn1/liblte_mme.h"
 #include "srsran/common/byte_buffer.h"

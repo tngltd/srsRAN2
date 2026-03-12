@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_NR_PHCH_WORKER_H
 #define SRSUE_NR_PHCH_WORKER_H
+#include <cstdint>
 
 #include "cc_worker.h"
 #include "srsran/common/thread_pool.h"

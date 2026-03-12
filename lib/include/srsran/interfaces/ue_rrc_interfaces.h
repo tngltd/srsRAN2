@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_UE_RRC_INTERFACES_H
 #define SRSRAN_UE_RRC_INTERFACES_H
+#include <cstdint>
 
 #include "phy_interface_types.h"
 #include "rrc_interface_types.h"

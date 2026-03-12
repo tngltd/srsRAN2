@@ -30,6 +30,7 @@
 
 #ifndef SRSRAN_SEQUENCE_H
 #define SRSRAN_SEQUENCE_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/common/phy_common.h"

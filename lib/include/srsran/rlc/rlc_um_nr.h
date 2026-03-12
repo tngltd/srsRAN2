@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_RLC_UM_NR_H
 #define SRSRAN_RLC_UM_NR_H
+#include <cstdint>
 
 #include "srsran/common/buffer_pool.h"
 #include "srsran/common/common.h"

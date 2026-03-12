@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_PHY_COMMON_INTERFACE_H
 #define SRSRAN_PHY_COMMON_INTERFACE_H
+#include <cstdint>
 
 #include "../radio/rf_buffer.h"
 #include "../radio/rf_timestamp.h"

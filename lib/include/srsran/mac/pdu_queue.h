@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_PDU_QUEUE_H
 #define SRSRAN_PDU_QUEUE_H
+#include <cstdint>
 
 #include "srsran/adt/circular_buffer.h"
 #include "srsran/common/block_queue.h"

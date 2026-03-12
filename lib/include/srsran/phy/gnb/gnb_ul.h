@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_GNB_UL_H
 #define SRSRAN_GNB_UL_H
+#include <cstdint>
 
 #include "srsran/phy/common/phy_common_nr.h"
 #include "srsran/phy/dft/ofdm.h"

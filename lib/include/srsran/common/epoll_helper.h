@@ -25,6 +25,7 @@
 
 #ifndef SRSRAN_EPOLL_HELPER_H
 #define SRSRAN_EPOLL_HELPER_H
+#include <cstdint>
 
 #include <atomic>
 #include <functional>

@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_NR_CC_WORKER_H
 #define SRSRAN_NR_CC_WORKER_H
+#include <cstdint>
 
 #include "srsue/hdr/phy/phy_common.h"
 #include "state.h"

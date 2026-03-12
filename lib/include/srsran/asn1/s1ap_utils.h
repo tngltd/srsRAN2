@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_S1AP_UTILS_H
 #define SRSRAN_S1AP_UTILS_H
+#include <cstdint>
 
 #include "asn1_utils.h"
 

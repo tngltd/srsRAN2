@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_SSB_H
 #define SRSRAN_SSB_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/common/phy_common_nr.h"

@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_MUX_H
 #define SRSUE_MUX_H
+#include <cstdint>
 
 #include <pthread.h>
 

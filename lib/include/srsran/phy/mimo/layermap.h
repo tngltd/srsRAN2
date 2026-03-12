@@ -31,6 +31,7 @@
 
 #ifndef SRSRAN_LAYERMAP_H
 #define SRSRAN_LAYERMAP_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/common/phy_common.h"

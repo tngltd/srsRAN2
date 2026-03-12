@@ -33,6 +33,7 @@
 
 #ifndef SRSRAN_TURBODECODER_GEN_H
 #define SRSRAN_TURBODECODER_GEN_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/fec/cbsegm.h"

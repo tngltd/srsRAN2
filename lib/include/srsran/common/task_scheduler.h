@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_TASK_SCHEDULER_H
 #define SRSRAN_TASK_SCHEDULER_H
+#include <cstdint>
 
 #include "block_queue.h"
 #include "interfaces_common.h"

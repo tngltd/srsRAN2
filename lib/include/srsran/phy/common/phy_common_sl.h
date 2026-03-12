@@ -29,6 +29,7 @@
 
 #ifndef SRSRAN_PHY_COMMON_SL_H
 #define SRSRAN_PHY_COMMON_SL_H
+#include <cstdint>
 
 /**
  *  \brief Common parameters and lookup functions for Sidelink PHY

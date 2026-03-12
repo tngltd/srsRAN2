@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_DMRS_PUCCH_H
 #define SRSRAN_DMRS_PUCCH_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/ch_estimation/chest_ul.h"

@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_RF_BUFFER_H
 #define SRSRAN_RF_BUFFER_H
+#include <cstdint>
 
 #include "srsran/interfaces/radio_interfaces.h"
 

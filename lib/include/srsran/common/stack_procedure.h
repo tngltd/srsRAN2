@@ -28,6 +28,7 @@
 
 #ifndef SRSRAN_RESUMABLE_PROCEDURES_H
 #define SRSRAN_RESUMABLE_PROCEDURES_H
+#include <cstdint>
 
 namespace srsran {
 

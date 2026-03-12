@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_SCELL_RECV_H
 #define SRSUE_SCELL_RECV_H
+#include <cstdint>
 
 #include "srsue/hdr/phy/phy_common.h"
 #include <set>

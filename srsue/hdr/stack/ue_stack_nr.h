@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_UE_STACK_NR_H
 #define SRSUE_UE_STACK_NR_H
+#include <cstdint>
 
 #include <functional>
 #include <pthread.h>

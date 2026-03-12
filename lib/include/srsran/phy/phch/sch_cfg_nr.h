@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_SCH_CFG_NR_H
 #define SRSRAN_SCH_CFG_NR_H
+#include <cstdint>
 
 #include "srsran/phy/fec/softbuffer.h"
 

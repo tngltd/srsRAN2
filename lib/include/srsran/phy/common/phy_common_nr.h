@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_PHY_COMMON_NR_H
 #define SRSRAN_PHY_COMMON_NR_H
+#include <cstdint>
 
 #include "phy_common.h"
 #include <inttypes.h>

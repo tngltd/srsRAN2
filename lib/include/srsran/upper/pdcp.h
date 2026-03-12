@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_PDCP_H
 #define SRSRAN_PDCP_H
+#include <cstdint>
 
 #include "srsran/common/common.h"
 #include "srsran/common/task_scheduler.h"

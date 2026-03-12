@@ -26,6 +26,7 @@
 
 #ifndef SRSRAN_RADIO_INTERFACES_H
 #define SRSRAN_RADIO_INTERFACES_H
+#include <cstdint>
 
 #include "srsran/phy/common/phy_common.h"
 #include "srsran/phy/common/timestamp.h"

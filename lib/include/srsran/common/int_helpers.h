@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_INT_HELPERS_H
 #define SRSRAN_INT_HELPERS_H
+#include <cstdint>
 
 namespace srsran {
 

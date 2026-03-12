@@ -22,6 +22,7 @@
 #ifndef SRSRAN_PHY_CONTROLLER_H
 #define SRSRAN_PHY_CONTROLLER_H
 
+#include <cstdint>
 #include "srsran/adt/fsm.h"
 #include "srsran/adt/observer.h"
 #include "srsran/common/task_scheduler.h"

@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_MAC_PCAP_H
 #define SRSRAN_MAC_PCAP_H
+#include <cstdint>
 
 #include "srsran/common/common.h"
 #include "srsran/common/mac_pcap_base.h"

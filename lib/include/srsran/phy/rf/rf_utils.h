@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_RF_UTILS_H
 #define SRSRAN_RF_UTILS_H
+#include <cstdint>
 
 #include "srsran/phy/rf/rf.h"
 #include "srsran/srsran.h"

@@ -29,6 +29,7 @@
 
 #ifndef SRSRAN_REFSIGNAL_DL_H
 #define SRSRAN_REFSIGNAL_DL_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/common/phy_common.h"

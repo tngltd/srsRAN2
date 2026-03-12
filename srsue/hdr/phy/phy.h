@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_PHY_H
 #define SRSUE_PHY_H
+#include <cstdint>
 
 #include "phy_common.h"
 #include "phy_metrics.h"

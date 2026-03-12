@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_SYNC_STATE_H
 #define SRSUE_SYNC_STATE_H
+#include <cstdint>
 
 namespace srsue {
 

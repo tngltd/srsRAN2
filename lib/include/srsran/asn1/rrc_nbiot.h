@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_RRC_NBIOT_H
 #define SRSASN1_RRC_NBIOT_H
+#include <cstdint>
 
 #include "rrc.h"
 

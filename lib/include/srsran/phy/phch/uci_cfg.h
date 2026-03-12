@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_UCI_CFG_H
 #define SRSRAN_UCI_CFG_H
+#include <cstdint>
 
 #include "srsran/phy/phch/cqi.h"
 

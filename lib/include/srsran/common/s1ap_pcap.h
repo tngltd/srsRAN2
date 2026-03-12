@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_S1AP_PCAP_H
 #define SRSRAN_S1AP_PCAP_H
+#include <cstdint>
 
 #include "srsran/common/pcap.h"
 #include <string>

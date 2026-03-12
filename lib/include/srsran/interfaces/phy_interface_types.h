@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_PHY_INTERFACE_TYPES_H
 #define SRSRAN_PHY_INTERFACE_TYPES_H
+#include <cstdint>
 
 #include "srsran/common/common.h"
 #include "srsran/srsran.h"

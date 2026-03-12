@@ -31,6 +31,7 @@
 
 #ifndef SRSRAN_LDPCRM_H
 #define SRSRAN_LDPCRM_H
+#include <cstdint>
 
 #include "srsran/phy/common/phy_common.h"
 #include "srsran/phy/fec/ldpc/base_graph.h"

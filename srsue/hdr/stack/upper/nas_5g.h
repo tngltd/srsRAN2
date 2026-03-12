@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_NAS_5G_H
 #define SRSUE_NAS_5G_H
+#include <cstdint>
 
 #include "nas_base.h"
 #include "srsran/asn1/nas_5g_ies.h"

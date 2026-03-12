@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_DL_HARQ_NR_H
 #define SRSRAN_DL_HARQ_NR_H
+#include <cstdint>
 
 #include "srsran/interfaces/mac_interface_types.h"
 #include "srsran/interfaces/ue_nr_interfaces.h"

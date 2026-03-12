@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_REFSIGNAL_DL_SYNC_H_
 #define SRSRAN_REFSIGNAL_DL_SYNC_H_
+#include <cstdint>
 
 #include <srsran/phy/ch_estimation/refsignal_dl.h>
 #include <srsran/phy/dft/ofdm.h>

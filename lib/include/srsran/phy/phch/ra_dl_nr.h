@@ -31,6 +31,7 @@
 
 #ifndef SRSRAN_RA_DL_NR_H
 #define SRSRAN_RA_DL_NR_H
+#include <cstdint>
 
 #include "srsran/phy/common/phy_common_nr.h"
 #include "srsran/phy/phch/dci_nr.h"

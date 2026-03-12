@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_RLC_COMMON_H
 #define SRSRAN_RLC_COMMON_H
+#include <cstdint>
 
 #include "srsran/adt/circular_buffer.h"
 #include "srsran/interfaces/rlc_interface_types.h"

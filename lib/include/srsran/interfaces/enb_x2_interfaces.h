@@ -25,6 +25,7 @@
 
 #ifndef SRSRAN_ENB_X2_INTERFACES_H
 #define SRSRAN_ENB_X2_INTERFACES_H
+#include <cstdint>
 
 namespace srsenb {
 

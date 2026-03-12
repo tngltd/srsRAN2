@@ -43,6 +43,7 @@
 
 #ifndef SRSRAN_UE_SYNC_H
 #define SRSRAN_UE_SYNC_H
+#include <cstdint>
 
 #include <stdbool.h>
 

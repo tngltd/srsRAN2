@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_UE_PDCP_INTERFACES_H
 #define SRSRAN_UE_PDCP_INTERFACES_H
+#include <cstdint>
 
 #include "pdcp_interface_types.h"
 #include "srsran/common/byte_buffer.h"

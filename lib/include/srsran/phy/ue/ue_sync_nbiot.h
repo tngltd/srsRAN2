@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_UE_SYNC_NBIOT_H
 #define SRSRAN_UE_SYNC_NBIOT_H
+#include <cstdint>
 
 #include <stdbool.h>
 

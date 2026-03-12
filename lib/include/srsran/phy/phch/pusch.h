@@ -29,6 +29,7 @@
 
 #ifndef SRSRAN_PUSCH_H
 #define SRSRAN_PUSCH_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/ch_estimation/refsignal_ul.h"

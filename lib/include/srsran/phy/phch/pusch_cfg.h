@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_PUSCH_CFG_H
 #define SRSRAN_PUSCH_CFG_H
+#include <cstdint>
 
 #include "srsran/phy/fec/softbuffer.h"
 #include "srsran/phy/phch/ra.h"

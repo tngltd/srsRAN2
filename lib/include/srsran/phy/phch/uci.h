@@ -29,6 +29,7 @@
 
 #ifndef SRSRAN_UCI_H
 #define SRSRAN_UCI_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/common/phy_common.h"

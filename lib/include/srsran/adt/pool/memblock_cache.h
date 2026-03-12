@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_MEMBLOCK_CACHE_H
 #define SRSRAN_MEMBLOCK_CACHE_H
+#include <cstdint>
 
 #include "pool_utils.h"
 #include <mutex>

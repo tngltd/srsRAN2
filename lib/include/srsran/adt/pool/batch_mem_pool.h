@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_BATCH_MEM_POOL_H
 #define SRSRAN_BATCH_MEM_POOL_H
+#include <cstdint>
 
 #include "memblock_cache.h"
 #include "pool_utils.h"

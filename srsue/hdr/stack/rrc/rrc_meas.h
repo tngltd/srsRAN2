@@ -21,6 +21,7 @@
 #ifndef SRSRAN_RRC_MEAS_H_
 #define SRSRAN_RRC_MEAS_H_
 
+#include <cstdint>
 #include "srsran/asn1/rrc.h"
 #include "srsran/asn1/rrc_utils.h"
 #include "srsran/common/common.h"

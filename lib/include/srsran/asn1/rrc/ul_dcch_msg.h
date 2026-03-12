@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_RRC_ULDCCH_MSG_H
 #define SRSASN1_RRC_ULDCCH_MSG_H
+#include <cstdint>
 
 #include "meascfg.h"
 #include "paging.h"

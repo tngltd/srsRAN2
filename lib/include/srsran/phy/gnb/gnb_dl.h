@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_GNB_DL_H
 #define SRSRAN_GNB_DL_H
+#include <cstdint>
 
 #include "srsran/phy/ch_estimation/csi_rs.h"
 #include "srsran/phy/common/phy_common_nr.h"

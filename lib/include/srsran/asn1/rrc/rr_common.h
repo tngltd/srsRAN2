@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_RRC_RR_COMMON_H
 #define SRSASN1_RRC_RR_COMMON_H
+#include <cstdint>
 
 #include "common.h"
 

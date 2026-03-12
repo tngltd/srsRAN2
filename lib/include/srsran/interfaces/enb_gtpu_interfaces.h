@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_ENB_GTPU_INTERFACES_H
 #define SRSRAN_ENB_GTPU_INTERFACES_H
+#include <cstdint>
 
 #include "srsran/adt/expected.h"
 #include "srsran/common/byte_buffer.h"

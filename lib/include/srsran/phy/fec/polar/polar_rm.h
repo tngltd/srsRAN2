@@ -31,6 +31,7 @@
 
 #ifndef SRSRAN_POLARRM_H
 #define SRSRAN_POLARRM_H
+#include <cstdint>
 
 /*!
  * \brief Describes a polar rate matcher or rate dematcher

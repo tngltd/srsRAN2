@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_WIENER_DL_H_
 #define SRSRAN_WIENER_DL_H_
+#include <cstdint>
 
 #include <srsran/config.h>
 #include <srsran/phy/common/phy_common.h>

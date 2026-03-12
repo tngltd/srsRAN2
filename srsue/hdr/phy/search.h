@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_SEARCH_H
 #define SRSUE_SEARCH_H
+#include <cstdint>
 
 #include "srsran/radio/radio.h"
 #include "srsran/srslog/srslog.h"

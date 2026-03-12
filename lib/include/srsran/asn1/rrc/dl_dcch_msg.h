@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_RRC_DLDCCH_MSG_H
 #define SRSASN1_RRC_DLDCCH_MSG_H
+#include <cstdint>
 
 #include "dl_ccch_msg.h"
 #include "security.h"

@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_DCI_NR_H
 #define SRSRAN_DCI_NR_H
+#include <cstdint>
 
 #include "dci.h"
 #include "srsran/phy/common/phy_common_nr.h"

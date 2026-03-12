@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_PCAP_H
 #define SRSRAN_PCAP_H
+#include <cstdint>
 
 #include <inttypes.h>
 #include <stdbool.h>

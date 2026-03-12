@@ -31,6 +31,7 @@
 
 #ifndef SRSRAN_LDPCENCODER_H
 #define SRSRAN_LDPCENCODER_H
+#include <cstdint>
 
 #include "srsran/phy/fec/ldpc/base_graph.h"
 

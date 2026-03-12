@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_UE_MIB_NBIOT_H
 #define SRSRAN_UE_MIB_NBIOT_H
+#include <cstdint>
 
 #include "srsran/config.h"
 #include "srsran/phy/ch_estimation/chest_dl_nbiot.h"

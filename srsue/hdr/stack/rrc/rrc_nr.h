@@ -22,6 +22,7 @@
 #ifndef SRSUE_RRC_NR_H
 #define SRSUE_RRC_NR_H
 
+#include <cstdint>
 #include "nr/rrc_nr_config.h"
 #include "srsran/adt/circular_map.h"
 #include "srsran/asn1/rrc_nr.h"

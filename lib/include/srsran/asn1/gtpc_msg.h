@@ -20,6 +20,7 @@
  */
 #ifndef SRSRAN_GTPC_MSG_H
 #define SRSRAN_GTPC_MSG_H
+#include <cstdint>
 
 #include "srsran/asn1/gtpc_ies.h"
 

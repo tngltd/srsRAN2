@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_DL_HARQ_H
 #define SRSUE_DL_HARQ_H
+#include <cstdint>
 
 #include "demux.h"
 #include "dl_sps.h"

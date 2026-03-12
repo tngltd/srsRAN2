@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_GNB_INTERFACES_H
 #define SRSRAN_GNB_INTERFACES_H
+#include <cstdint>
 
 #include "srsran/srsran.h"
 

@@ -20,6 +20,7 @@
  */
 #ifndef SRSUE_INTRA_MEASURE_BASE_H
 #define SRSUE_INTRA_MEASURE_BASE_H
+#include <cstdint>
 
 #include "srsran/interfaces/ue_phy_interfaces.h"
 #include <condition_variable>

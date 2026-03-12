@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_TURBODECODER_SSE_H
 #define SRSRAN_TURBODECODER_SSE_H
+#include <cstdint>
 
 #include "srsran/config.h"
 

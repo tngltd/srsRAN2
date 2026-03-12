@@ -27,6 +27,7 @@
 
 #ifndef SRSASN1_RRC_HO_CMD_H
 #define SRSASN1_RRC_HO_CMD_H
+#include <cstdint>
 
 #include "dl_dcch_msg.h"
 

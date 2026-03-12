@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_UE_PHY_INTERFACES_H
 #define SRSRAN_UE_PHY_INTERFACES_H
+#include <cstdint>
 
 #include "srsran/srsran.h"
 

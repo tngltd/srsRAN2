@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_EPC_INTERFACES_H
 #define SRSRAN_EPC_INTERFACES_H
+#include <cstdint>
 
 #include "srsran/asn1/gtpc_ies.h"
 #include "srsran/common/common.h"
