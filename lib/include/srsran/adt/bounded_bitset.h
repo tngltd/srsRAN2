@@ -24,7 +24,11 @@
 
 #include "srsran/srslog/bundled/fmt/format.h"
 #include "srsran/support/srsran_assert.h"
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 #include <inttypes.h>
 #include <string>
 

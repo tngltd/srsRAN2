@@ -25,7 +25,11 @@
 #include "memblock_cache.h"
 #include "srsran/common/thread_pool.h"
 #include <cassert>
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 #include <memory>
 #include <mutex>
 

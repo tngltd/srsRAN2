@@ -23,7 +23,11 @@
 #define SRSRAN_COMMON_LTE_H
 
 #include <array>
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 namespace srsran {
 

@@ -27,7 +27,11 @@
 
 #ifndef SRSASN1_RRC_BCCH_MSG_H
 #define SRSASN1_RRC_BCCH_MSG_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "meascfg.h"
 #include "si.h"

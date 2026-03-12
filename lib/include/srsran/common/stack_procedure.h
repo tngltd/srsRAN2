@@ -28,7 +28,11 @@
 
 #ifndef SRSRAN_RESUMABLE_PROCEDURES_H
 #define SRSRAN_RESUMABLE_PROCEDURES_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 namespace srsran {
 

@@ -31,7 +31,11 @@
 
 #ifndef SRSRAN_POLARRM_H
 #define SRSRAN_POLARRM_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 /*!
  * \brief Describes a polar rate matcher or rate dematcher

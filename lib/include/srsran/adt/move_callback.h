@@ -25,7 +25,11 @@
 #include "detail/type_storage.h"
 #include "srsran/support/srsran_assert.h"
 #include <cstddef>
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 #include <cstdio>
 #include <cstdlib>
 #include <functional>

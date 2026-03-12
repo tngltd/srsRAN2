@@ -21,7 +21,11 @@
 
 #ifndef SRSRAN_RRC_INTERFACE_TYPES_H
 #define SRSRAN_RRC_INTERFACE_TYPES_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/common/bcd_helpers.h"
 #include "srsran/common/common.h"

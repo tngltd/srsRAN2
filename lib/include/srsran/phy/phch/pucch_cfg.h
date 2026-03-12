@@ -21,7 +21,11 @@
 
 #ifndef SRSRAN_PUCCH_CFG_H
 #define SRSRAN_PUCCH_CFG_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/phy/phch/cqi.h"
 #include "srsran/phy/phch/ra.h"

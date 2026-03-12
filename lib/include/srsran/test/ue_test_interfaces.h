@@ -21,7 +21,11 @@
 
 #ifndef SRSUE_DUMMY_CLASSES_H
 #define SRSUE_DUMMY_CLASSES_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/common/task_scheduler.h"
 #include "srsran/interfaces/phy_interface_types.h"

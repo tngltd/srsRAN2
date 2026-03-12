@@ -27,7 +27,11 @@
 
 #ifndef SRSASN1_RRC_SL_H
 #define SRSASN1_RRC_SL_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "rr_common.h"
 

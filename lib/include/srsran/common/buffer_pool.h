@@ -21,7 +21,11 @@
 
 #ifndef SRSRAN_BUFFER_POOL_H
 #define SRSRAN_BUFFER_POOL_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "byte_buffer.h"
 #include "srsran/adt/bounded_vector.h"

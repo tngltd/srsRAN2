@@ -21,7 +21,11 @@
 
 #ifndef SRSLOG_DETAIL_LOG_ENTRY_METADATA_H
 #define SRSLOG_DETAIL_LOG_ENTRY_METADATA_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/srslog/bundled/fmt/printf.h"
 #include <chrono>

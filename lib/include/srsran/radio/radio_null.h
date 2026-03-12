@@ -26,7 +26,11 @@
 
 #ifndef SRSRAN_RADIO_NULL_H
 #define SRSRAN_RADIO_NULL_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "radio_base.h"
 #include "srsran/interfaces/radio_interfaces.h"

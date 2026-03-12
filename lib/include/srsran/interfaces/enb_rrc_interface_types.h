@@ -21,7 +21,11 @@
 
 #ifndef SRSRAN_ENB_RRC_INTERFACE_TYPES_H
 #define SRSRAN_ENB_RRC_INTERFACE_TYPES_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/asn1/rrc/meascfg.h"
 #include <vector>

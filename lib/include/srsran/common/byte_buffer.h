@@ -25,7 +25,11 @@
 #include "common.h"
 #include "srsran/adt/span.h"
 #include <chrono>
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 //#define SRSRAN_BUFFER_POOL_LOG_ENABLED
 #define SRSRAN_BUFFER_POOL_LOG_NAME_LEN 128

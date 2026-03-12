@@ -27,7 +27,11 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 #include <cstring>
 #include <limits>
 #include <map>

@@ -21,7 +21,11 @@
 
 #ifndef SRSRAN_BATCH_MEM_POOL_H
 #define SRSRAN_BATCH_MEM_POOL_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "memblock_cache.h"
 #include "pool_utils.h"

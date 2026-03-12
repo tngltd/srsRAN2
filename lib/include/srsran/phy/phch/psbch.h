@@ -21,7 +21,11 @@
 
 #ifndef SRSRAN_PSBCH_H
 #define SRSRAN_PSBCH_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/phy/common/phy_common_sl.h"
 #include "srsran/phy/dft/dft_precoding.h"

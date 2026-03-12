@@ -22,7 +22,11 @@
 #ifndef SRSRAN_ENB_COMMAND_INTERFACE_H
 #define SRSRAN_ENB_COMMAND_INTERFACE_H
 
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 namespace srsenb {
 class enb_command_interface

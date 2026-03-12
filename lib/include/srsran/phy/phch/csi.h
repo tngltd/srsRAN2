@@ -21,7 +21,11 @@
 
 #ifndef SRSRAN_CSI_NR_H
 #define SRSRAN_CSI_NR_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "uci_cfg_nr.h"
 

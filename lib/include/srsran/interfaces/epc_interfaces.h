@@ -21,7 +21,11 @@
 
 #ifndef SRSRAN_EPC_INTERFACES_H
 #define SRSRAN_EPC_INTERFACES_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/asn1/gtpc_ies.h"
 #include "srsran/common/common.h"

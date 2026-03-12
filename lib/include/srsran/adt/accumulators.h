@@ -24,7 +24,11 @@
 
 #include <cassert>
 #include <cmath>
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 #include <limits>
 #include <vector>
 

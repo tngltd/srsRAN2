@@ -22,7 +22,11 @@
 #ifndef SRSENB_ENB_EVENTS_H
 #define SRSENB_ENB_EVENTS_H
 
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 #include <memory>
 
 namespace srslog {

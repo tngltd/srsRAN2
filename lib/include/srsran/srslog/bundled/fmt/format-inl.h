@@ -7,7 +7,11 @@
 
 #ifndef FMT_FORMAT_INL_H_
 #define FMT_FORMAT_INL_H_
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include <cassert>
 #include <cctype>

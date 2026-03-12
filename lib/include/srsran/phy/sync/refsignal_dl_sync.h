@@ -21,7 +21,11 @@
 
 #ifndef SRSRAN_REFSIGNAL_DL_SYNC_H_
 #define SRSRAN_REFSIGNAL_DL_SYNC_H_
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include <srsran/phy/ch_estimation/refsignal_dl.h>
 #include <srsran/phy/dft/ofdm.h>

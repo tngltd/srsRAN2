@@ -27,7 +27,11 @@
 
 #ifndef SRSASN1_RRC_PAGING_H
 #define SRSASN1_RRC_PAGING_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "common.h"
 

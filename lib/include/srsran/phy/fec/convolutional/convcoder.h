@@ -31,7 +31,11 @@
 
 #ifndef SRSRAN_CONVCODER_H
 #define SRSRAN_CONVCODER_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/config.h"
 #include <stdbool.h>

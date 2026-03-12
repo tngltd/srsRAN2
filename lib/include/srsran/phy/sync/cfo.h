@@ -29,7 +29,11 @@
 
 #ifndef SRSRAN_CFO_H
 #define SRSRAN_CFO_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include <complex.h>
 

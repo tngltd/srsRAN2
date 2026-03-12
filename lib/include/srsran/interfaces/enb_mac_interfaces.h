@@ -24,7 +24,11 @@
 
 #ifndef SRSRAN_ENB_MAC_INTERFACES_H
 #define SRSRAN_ENB_MAC_INTERFACES_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 namespace srsenb {
 

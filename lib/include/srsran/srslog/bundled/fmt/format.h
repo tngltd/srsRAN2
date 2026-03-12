@@ -36,7 +36,11 @@
 #include <algorithm>
 #include <cerrno>
 #include <cmath>
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 #include <limits>
 #include <memory>
 #include <stdexcept>

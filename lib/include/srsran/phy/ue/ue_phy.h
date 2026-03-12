@@ -32,7 +32,11 @@
 
 #ifndef SRSRAN_UE_PHY_H
 #define SRSRAN_UE_PHY_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #define SYNC_MODE_CV 0
 #define SYNC_MODE_CALLBACK 1

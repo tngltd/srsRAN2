@@ -21,7 +21,11 @@
 
 #ifndef SRSRAN_OFDM_H
 #define SRSRAN_OFDM_H
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 /**********************************************************************************************
  *  File:         ofdm.h
