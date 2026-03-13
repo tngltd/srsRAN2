@@ -45,6 +45,16 @@ jobs:
             fi
           done
 
+      - name: Upload build artifacts (libs and executables)
+        uses: actions/upload-artifact@v4
+        with:
+          name: srsran2-build-ubuntu-latest
+          path: |
+            build/lib
+            build/srsue/src/srsue
+            build/srsenb/src/srsenb
+            build/srsepc/src/srsepc
+
   build_ubuntu_24_04_arm:
     runs-on: ubuntu-24.04-arm
     steps:
@@ -80,3 +90,13 @@ jobs:
               exit 1
             fi
           done
+
+      - name: Upload build artifacts (libs and executables)
+        uses: actions/upload-artifact@v4
+        with:
+          name: srsran2-build-ubuntu-24.04-arm
+          path: |
+            build/lib
+            build/srsue/src/srsue
+            build/srsenb/src/srsenb
+            build/srsepc/src/srsepc
