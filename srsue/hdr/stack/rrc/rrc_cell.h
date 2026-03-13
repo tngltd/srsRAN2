@@ -22,6 +22,7 @@
 #ifndef SRSRAN_RRC_CELL_H
 #define SRSRAN_RRC_CELL_H
 
+#include <cstdint>
 #include "srsran/asn1/rrc.h"
 #include "srsran/asn1/rrc_nr.h"
 #include "srsran/asn1/rrc_nr_utils.h"

@@ -22,6 +22,7 @@
 #ifndef SRSUE_NAS_TEST_COMMON
 #define SRSUE_NAS_TEST_COMMON
 
+#include <cstdint>
 #include "srsran/common/bcd_helpers.h"
 #include "srsran/common/test_common.h"
 #include "srsran/common/tsan_options.h"

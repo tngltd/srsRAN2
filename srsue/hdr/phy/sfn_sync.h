@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_SFN_SYNC_H
 #define SRSUE_SFN_SYNC_H
+#include <cstdint>
 
 #include "srsran/radio/radio.h"
 #include "srsran/srslog/srslog.h"

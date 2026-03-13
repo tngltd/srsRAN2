@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_PACKET_FILTER_H
 #define SRSUE_PACKET_FILTER_H
+#include <cstdint>
 
 #include "srsran/asn1/liblte_mme.h"
 #include "srsran/common/buffer_pool.h"

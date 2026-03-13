@@ -29,6 +29,11 @@
 
 #ifndef SRSRAN_PHICH_H
 #define SRSRAN_PHICH_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "regs.h"
 #include "srsran/config.h"

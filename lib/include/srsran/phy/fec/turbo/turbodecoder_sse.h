@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_TURBODECODER_SSE_H
 #define SRSRAN_TURBODECODER_SSE_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/config.h"
 

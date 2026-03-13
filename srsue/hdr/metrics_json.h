@@ -27,6 +27,7 @@
 #ifndef SRSUE_METRICS_JSON_H
 #define SRSUE_METRICS_JSON_H
 
+#include <cstdint>
 #include "srsran/srslog/log_channel.h"
 #include "ue_metrics_interface.h"
 

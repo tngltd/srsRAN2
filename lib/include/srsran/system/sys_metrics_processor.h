@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_SYS_METRICS_PROCESSOR_H
 #define SRSRAN_SYS_METRICS_PROCESSOR_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/srslog/logger.h"
 #include "srsran/system/sys_metrics.h"

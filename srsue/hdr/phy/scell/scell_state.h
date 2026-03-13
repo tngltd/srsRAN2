@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_SCELL_STATE_H
 #define SRSRAN_SCELL_STATE_H
+#include <cstdint>
 
 #include <cinttypes>
 #include <mutex>

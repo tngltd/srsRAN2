@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_NAS_H
 #define SRSUE_NAS_H
+#include <cstdint>
 
 #include "nas_base.h"
 #include "srsran/asn1/liblte_mme.h"

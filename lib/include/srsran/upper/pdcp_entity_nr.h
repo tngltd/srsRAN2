@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_PDCP_ENTITY_NR_H
 #define SRSRAN_PDCP_ENTITY_NR_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "pdcp_entity_base.h"
 #include "srsran/common/buffer_pool.h"

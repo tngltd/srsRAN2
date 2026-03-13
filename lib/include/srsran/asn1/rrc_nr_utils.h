@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_RRC_NR_UTILS_H
 #define SRSRAN_RRC_NR_UTILS_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsenb/hdr/stack/mac/sched_interface.h"
 #include "srsran/common/phy_cfg_nr.h"

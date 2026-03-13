@@ -21,6 +21,11 @@
 
 #ifndef SRSLOG_LOGGER_H
 #define SRSLOG_LOGGER_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/srslog/log_channel.h"
 

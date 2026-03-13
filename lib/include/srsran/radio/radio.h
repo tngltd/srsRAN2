@@ -36,6 +36,11 @@
 
 #ifndef SRSRAN_RADIO_H
 #define SRSRAN_RADIO_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 namespace srsran {
 

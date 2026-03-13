@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_PHCH_RECV_H
 #define SRSUE_PHCH_RECV_H
+#include <cstdint>
 
 #include <condition_variable>
 #include <map>

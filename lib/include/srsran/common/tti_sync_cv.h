@@ -27,6 +27,11 @@
 
 #ifndef SRSRAN_TTI_SYNC_CV_H
 #define SRSRAN_TTI_SYNC_CV_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/common/tti_sync.h"
 #include <pthread.h>

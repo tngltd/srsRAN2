@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_UL_HARQ_H
 #define SRSUE_UL_HARQ_H
+#include <cstdint>
 
 #include "mux.h"
 #include "proc_ra.h"

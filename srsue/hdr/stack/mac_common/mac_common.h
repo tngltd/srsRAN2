@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_MAC_COMMON_H
 #define SRSUE_MAC_COMMON_H
+#include <cstdint>
 
 #include "srsran/common/string_helpers.h"
 #include "srsran/phy/common/phy_common.h"

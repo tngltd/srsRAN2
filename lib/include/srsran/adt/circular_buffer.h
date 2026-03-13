@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_CIRCULAR_BUFFER_H
 #define SRSRAN_CIRCULAR_BUFFER_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/adt/detail/type_storage.h"
 #include "srsran/adt/expected.h"

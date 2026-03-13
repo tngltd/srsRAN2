@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_LTE_SF_WORKER_H
 #define SRSUE_LTE_SF_WORKER_H
+#include <cstdint>
 
 #include "cc_worker.h"
 #include "srsran/common/thread_pool.h"

@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_PHY_METRICS_H
 #define SRSUE_PHY_METRICS_H
+#include <cstdint>
 
 #include "srsran/srsran.h"
 #include <array>

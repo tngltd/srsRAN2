@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_EVM_H_
 #define SRSRAN_EVM_H_
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/phy/modem/mod.h"
 #include "srsran/phy/modem/modem_table.h"

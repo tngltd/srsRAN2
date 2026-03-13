@@ -25,6 +25,7 @@
 
 #ifndef SRSUE_UE_STACK_LTE_H
 #define SRSUE_UE_STACK_LTE_H
+#include <cstdint>
 
 #include "mac/mac.h"
 #include "mac_nr/mac_nr.h"

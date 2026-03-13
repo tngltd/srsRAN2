@@ -26,7 +26,11 @@
 #include "srsran/common/common.h"
 #include "srsran/srslog/srslog.h"
 #include "srsran/support/srsran_assert.h"
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 #include <limits>
 
 namespace srsran {

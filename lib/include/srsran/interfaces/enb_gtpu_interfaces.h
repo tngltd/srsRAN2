@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_ENB_GTPU_INTERFACES_H
 #define SRSRAN_ENB_GTPU_INTERFACES_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/adt/expected.h"
 #include "srsran/common/byte_buffer.h"

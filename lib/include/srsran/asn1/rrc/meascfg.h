@@ -27,6 +27,11 @@
 
 #ifndef SRSASN1_RRC_MEASCFG_H
 #define SRSASN1_RRC_MEASCFG_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "common_ext.h"
 #include "rr_common.h"

@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_MAC_H
 #define SRSUE_MAC_H
+#include <cstdint>
 
 #include "demux.h"
 #include "dl_harq.h"

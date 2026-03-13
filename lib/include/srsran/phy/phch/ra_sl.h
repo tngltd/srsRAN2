@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_RA_SL_H
 #define SRSRAN_RA_SL_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 SRSRAN_API int srsran_sl_get_available_pool_prb(uint32_t prb_num, uint32_t prb_start, uint32_t prb_end);
 

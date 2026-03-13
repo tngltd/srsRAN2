@@ -21,6 +21,7 @@
 
 #ifndef SRSRAN_SCELL_SYNC_H
 #define SRSRAN_SCELL_SYNC_H
+#include <cstdint>
 
 namespace srsue {
 namespace scell {

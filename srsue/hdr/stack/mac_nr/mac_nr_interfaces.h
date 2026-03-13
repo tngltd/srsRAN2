@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_MAC_NR_INTERFACES_H
 #define SRSUE_MAC_NR_INTERFACES_H
+#include <cstdint>
 
 #include "srsran/common/interfaces_common.h"
 #include "srsran/mac/mac_sch_pdu_nr.h"

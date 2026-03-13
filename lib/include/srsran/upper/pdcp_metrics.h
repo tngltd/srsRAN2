@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_PDCP_METRICS_H
 #define SRSRAN_PDCP_METRICS_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/common/common.h"
 #include <iostream>

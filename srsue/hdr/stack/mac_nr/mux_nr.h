@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_MUX_NR_H
 #define SRSUE_MUX_NR_H
+#include <cstdint>
 
 #include "mac_nr_interfaces.h"
 #include "proc_bsr_nr.h"

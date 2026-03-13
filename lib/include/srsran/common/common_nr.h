@@ -24,7 +24,11 @@
 #define SRSRAN_COMMON_NR_H
 
 #include <array>
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 namespace srsran {
 

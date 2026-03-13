@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_PBCH_NR_H
 #define SRSRAN_PBCH_NR_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/phy/common/phy_common_nr.h"
 #include "srsran/phy/fec/crc.h"

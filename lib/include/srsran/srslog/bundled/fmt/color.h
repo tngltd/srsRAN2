@@ -7,6 +7,11 @@
 
 #ifndef FMT_COLOR_H_
 #define FMT_COLOR_H_
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "format.h"
 

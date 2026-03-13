@@ -22,6 +22,7 @@
 #ifndef SRSUE_PHCH_COMMON_H
 #define SRSUE_PHCH_COMMON_H
 
+#include <cstdint>
 #include "phy_metrics.h"
 #include "srsran/adt/circular_array.h"
 #include "srsran/common/gen_mch_tables.h"

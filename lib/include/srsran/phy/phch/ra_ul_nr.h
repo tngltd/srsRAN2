@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_RA_UL_NR_H
 #define SRSRAN_RA_UL_NR_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "dci_nr.h"
 #include "srsran/config.h"

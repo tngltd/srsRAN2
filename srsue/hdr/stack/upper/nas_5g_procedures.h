@@ -22,6 +22,7 @@
 #ifndef SRSUE_NAS_5G_PROCEDURES_H_
 #define SRSUE_NAS_5G_PROCEDURES_H_
 
+#include <cstdint>
 #include "srsue/hdr/stack/upper/nas_5g.h"
 
 namespace srsue {

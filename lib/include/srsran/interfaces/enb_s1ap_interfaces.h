@@ -24,6 +24,11 @@
 
 #ifndef SRSRAN_ENB_S1AP_INTERFACES_H
 #define SRSRAN_ENB_S1AP_INTERFACES_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 namespace srsenb {
 

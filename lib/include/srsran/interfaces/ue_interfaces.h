@@ -27,6 +27,11 @@
 
 #ifndef SRSRAN_UE_INTERFACES_H
 #define SRSRAN_UE_INTERFACES_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "ue_mac_interfaces.h"
 #include "ue_rrc_interfaces.h"

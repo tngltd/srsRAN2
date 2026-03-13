@@ -26,6 +26,7 @@
 
 #ifndef SRSUE_UE_NR_PHY_BASE_H
 #define SRSUE_UE_NR_PHY_BASE_H
+#include <cstdint>
 
 #include "srsran/interfaces/radio_interfaces.h"
 #include "srsran/interfaces/ue_nr_interfaces.h"

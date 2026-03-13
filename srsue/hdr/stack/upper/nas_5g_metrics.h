@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_NAS_5G_METRICS_H
 #define SRSUE_NAS_5G_METRICS_H
+#include <cstdint>
 
 #include "nas_5gmm_state.h"
 

@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_MUX_BASE_H
 #define SRSUE_MUX_BASE_H
+#include <cstdint>
 
 #include "srsran/interfaces/mac_interface_types.h"
 

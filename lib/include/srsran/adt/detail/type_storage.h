@@ -23,7 +23,11 @@
 #define SRSRAN_TYPE_STORAGE_H
 
 #include <cstddef>
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 #include <type_traits>
 #include <utility>
 

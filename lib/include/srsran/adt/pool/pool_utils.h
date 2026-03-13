@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_POOL_UTILS_H
 #define SRSRAN_POOL_UTILS_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "../move_callback.h"
 #include <memory>

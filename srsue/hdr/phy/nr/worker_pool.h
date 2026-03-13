@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_NR_WORKER_POOL_H
 #define SRSUE_NR_WORKER_POOL_H
+#include <cstdint>
 
 #include "sf_worker.h"
 #include "srsran/common/thread_pool.h"

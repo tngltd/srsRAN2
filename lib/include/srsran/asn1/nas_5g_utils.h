@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_NAS_5G_UTILS_H
 #define SRSRAN_NAS_5G_UTILS_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/asn1/asn1_utils.h"
 #include "srsran/common/byte_buffer.h"

@@ -25,6 +25,11 @@
 
 #ifndef SRSRAN_EPOLL_HELPER_H
 #define SRSRAN_EPOLL_HELPER_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include <atomic>
 #include <functional>

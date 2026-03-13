@@ -13,6 +13,11 @@
 
 #ifndef SRSRAN_LIBLTE_SECURITY_H
 #define SRSRAN_LIBLTE_SECURITY_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 /*******************************************************************************
                               INCLUDES

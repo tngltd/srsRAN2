@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_LINEAR_ALLOCATOR_H
 #define SRSRAN_LINEAR_ALLOCATOR_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "pool_utils.h"
 #include "srsran/support/srsran_assert.h"

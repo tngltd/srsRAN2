@@ -29,6 +29,11 @@
 
 #ifndef SRSRAN_PDCCH_H
 #define SRSRAN_PDCCH_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/config.h"
 #include "srsran/phy/ch_estimation/chest_dl.h"

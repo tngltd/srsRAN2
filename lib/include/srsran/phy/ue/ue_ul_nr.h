@@ -31,6 +31,11 @@
 
 #ifndef SRSRAN_UE_UL_DATA_H
 #define SRSRAN_UE_UL_DATA_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/phy/ch_estimation/dmrs_sch.h"
 #include "srsran/phy/common/phy_common_nr.h"

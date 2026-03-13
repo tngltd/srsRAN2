@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_TA_CONTROL_H
 #define SRSUE_TA_CONTROL_H
+#include <cstdint>
 
 #include <inttypes.h>
 #include <mutex>

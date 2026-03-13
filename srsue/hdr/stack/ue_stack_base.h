@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_UE_STACK_BASE_H
 #define SRSUE_UE_STACK_BASE_H
+#include <cstdint>
 
 #include "rrc/nr/rrc_nr_config.h"
 #include "rrc/rrc_config.h"

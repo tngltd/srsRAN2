@@ -27,7 +27,11 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 #include <cstring>
 #include <limits>
 #include <map>
@@ -200,13 +204,31 @@ public:
 
   dyn_array() = default;
   explicit dyn_array(uint32_t new_size) : size_(new_size), cap_(new_size) { data_ = new T[size_]; }
-  dyn_array(const dyn_array<T>& other) : dyn_array(&other[0], other.size_) {}
+  dyn_array(const dyn_array<T>& other)
+  {
+    size_ = other.size_;
+    cap_  = other.cap_;
+    if (cap_ > 0) {
+      data_ = new T[cap_];
+      if (size_ > 0) {
+        std::copy(&other.data_[0], &other.data_[size_], data_);
+      }
+    } else {
+      data_ = NULL;
+    }
+  }
   dyn_array(const T* ptr, uint32_t nof_items)
   {
     size_ = nof_items;
     cap_  = nof_items;
-    data_ = new T[cap_];
-    std::copy(ptr, ptr + size_, data_);
+    if (cap_ > 0) {
+      data_ = new T[cap_];
+      if (ptr != nullptr && size_ > 0) {
+        std::copy(ptr, ptr + size_, data_);
+      }
+    } else {
+      data_ = NULL;
+    }
   }
   ~dyn_array()
   {
@@ -224,7 +246,9 @@ public:
       return *this;
     }
     resize(other.size());
-    std::copy(&other[0], &other[size_], data_);
+    if (size_ > 0) {
+      std::copy(&other[0], &other[size_], data_);
+    }
     return *this;
   }
   void resize(uint32_t new_size, uint32_t new_cap = 0)
@@ -241,7 +265,7 @@ public:
     cap_        = new_size > new_cap ? new_size : new_cap;
     if (cap_ > 0) {
       data_ = new T[cap_];
-      if (old_data != NULL) {
+      if (old_data != NULL && size_ > 0) {
         srsran_assert(cap_ > size_, "Old size larger than new capacity in dyn_array\n");
         std::copy(&old_data[0], &old_data[size_], data_);
       }

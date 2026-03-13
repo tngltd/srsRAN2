@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_PRACH_H
 #define SRSUE_PRACH_H
+#include <cstdint>
 
 #include "srsran/interfaces/ue_phy_interfaces.h"
 #include "srsran/radio/radio.h"

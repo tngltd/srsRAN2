@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_SECURITY_H
 #define SRSRAN_SECURITY_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 /******************************************************************************
  * Common security header - wraps ciphering/integrity check algorithms.

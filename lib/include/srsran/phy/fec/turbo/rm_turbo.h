@@ -29,6 +29,11 @@
 
 #ifndef SRSRAN_RM_TURBO_H
 #define SRSRAN_RM_TURBO_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "srsran/config.h"
 #include "srsran/phy/fec/turbo/turbodecoder.h"

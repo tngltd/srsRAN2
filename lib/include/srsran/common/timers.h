@@ -32,7 +32,11 @@
 #include "srsran/adt/intrusive_list.h"
 #include "srsran/adt/move_callback.h"
 #include <algorithm>
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 #include <deque>
 #include <inttypes.h>
 #include <limits>

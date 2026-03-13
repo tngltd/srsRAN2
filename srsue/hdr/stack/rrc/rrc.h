@@ -22,6 +22,7 @@
 #ifndef SRSUE_RRC_H
 #define SRSUE_RRC_H
 
+#include <cstdint>
 #include "rrc_cell.h"
 #include "rrc_config.h"
 #include "rrc_metrics.h"

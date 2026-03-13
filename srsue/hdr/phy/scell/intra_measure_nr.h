@@ -20,6 +20,7 @@
  */
 #ifndef SRSRAN_INTRA_MEASURE_NR_H
 #define SRSRAN_INTRA_MEASURE_NR_H
+#include <cstdint>
 
 #include "intra_measure_base.h"
 #include <srsran/srsran.h>

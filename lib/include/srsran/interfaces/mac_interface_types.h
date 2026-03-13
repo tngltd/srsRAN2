@@ -21,6 +21,11 @@
 
 #ifndef SRSRAN_MAC_INTERFACE_TYPES_H
 #define SRSRAN_MAC_INTERFACE_TYPES_H
+#ifdef __cplusplus
+#include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 #include "rrc_interface_types.h"
 

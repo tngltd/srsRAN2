@@ -21,6 +21,7 @@
 
 #ifndef SRSUE_USIM_H
 #define SRSUE_USIM_H
+#include <cstdint>
 
 #include "srsran/common/common.h"
 #include "srsran/common/security.h"
