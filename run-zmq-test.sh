@@ -6,15 +6,22 @@
 # Usage:  sudo ./run-zmq-test.sh   (needs root for the TUN interfaces)
 set -u
 
-BUILD="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/build"
-CFG="$HOME/.config/srsran"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BUILD="$ROOT/build"
+CFG=/tmp/srscfg
 LOG=/tmp/srslogs
-mkdir -p "$LOG"
+mkdir -p "$CFG" "$LOG"
 
-# Install default example configs (strips .example) if not already present.
-if [ ! -f "$CFG/enb.conf" ]; then
-  yes | "$BUILD/srsran_install_configs.sh" user >/dev/null 2>&1 || true
-fi
+# Assemble configs from the in-tree .example files (strips .example). Running each
+# component from $CFG lets the relative references (sib.conf/rr.conf/rb.conf/user_db.csv) resolve.
+cp "$ROOT"/srsenb/enb.conf.example      "$CFG/enb.conf"
+cp "$ROOT"/srsenb/sib.conf.example      "$CFG/sib.conf"
+cp "$ROOT"/srsenb/rr.conf.example       "$CFG/rr.conf"
+cp "$ROOT"/srsenb/rb.conf.example       "$CFG/rb.conf"
+cp "$ROOT"/srsue/ue.conf.example        "$CFG/ue.conf"
+cp "$ROOT"/srsepc/epc.conf.example      "$CFG/epc.conf"
+cp "$ROOT"/srsepc/user_db.csv.example   "$CFG/user_db.csv"
+cd "$CFG"
 
 echo ">> starting srsEPC (core network)"
 "$BUILD/srsepc/src/srsepc" "$CFG/epc.conf" >"$LOG/epc.log" 2>&1 &
