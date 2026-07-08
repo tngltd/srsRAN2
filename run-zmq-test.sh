@@ -14,9 +14,18 @@ mkdir -p "$CFG" "$LOG"
 
 # Kill any leftovers from a previous run (stale ZMQ sockets block re-binding).
 for p in srsue srsenb srsepc; do pkill -9 -x "$p" 2>/dev/null; done
+ip netns del ue1 2>/dev/null
 sleep 1
-cleanup() { for p in srsue srsenb srsepc; do pkill -9 -x "$p" 2>/dev/null; done; }
+cleanup() {
+  for p in srsue srsenb srsepc; do pkill -9 -x "$p" 2>/dev/null; done
+  ip netns del ue1 2>/dev/null
+}
 trap cleanup EXIT
+
+# Put the UE's data interface in its own network namespace so pinged traffic
+# actually traverses the GTP tunnel (UE -> eNB -> EPC) instead of being
+# short-circuited by the host routing table.
+ip netns add ue1
 
 # Bind ZMQ to loopback on high ports so the Codespaces/host port-forwarder
 # doesn't grab them (it auto-forwards 0.0.0.0 listeners).
@@ -47,6 +56,7 @@ ENB=$!; sleep 5
 echo ">> starting srsUE (the phone) over ZMQ"
 "$BUILD/srsue/src/srsue" "$CFG/ue.conf" \
   --rf.device_name=zmq --rf.device_args="$UE_ARGS" \
+  --gw.netns=ue1 \
   >"$LOG/ue.log" 2>&1 &
 UE=$!
 
@@ -59,10 +69,10 @@ done
 sleep 2
 echo "===================== srsUE log ====================="
 cat "$LOG/ue.log"
-echo "===================== tun_srsue ====================="
-ip addr show tun_srsue 2>&1 || true
-echo "===================== data-plane ping (UE -> SGi GW) ====================="
-timeout 10 ping -c 3 -I tun_srsue 172.16.0.1 2>&1 || true
+echo "===================== tun_srsue (inside netns ue1) ====================="
+ip netns exec ue1 ip addr show tun_srsue 2>&1 || true
+echo "===================== data-plane ping (UE -> SGi GW, through GTP tunnel) ====================="
+ip netns exec ue1 timeout 10 ping -c 3 172.16.0.1 2>&1 || true
 
 echo ">> stopping"
 kill "$UE" "$ENB" "$EPC" 2>/dev/null
