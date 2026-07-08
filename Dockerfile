@@ -1,11 +1,9 @@
-# srsRAN 4G build environment
-# Builds srsUE / srsENB / srsEPC inside Linux (works on Apple Silicon via linux/arm64).
+# srsRAN 4G build environment (Ubuntu 24.04, x86_64 or arm64).
+# The CMake/source fixes on this branch make it build cleanly on GCC 13.
 #
 # Build the image:   docker build -t srsran-build .
-# Compile the code:  see docker-build.sh  (mounts the repo and runs cmake+make)
-# Ubuntu 20.04 ships GCC 9, which srsRAN 21.10 was written against.
-# Newer GCC (11+) turns a benign turbo-decoder warning into an error via -Werror.
-FROM ubuntu:20.04
+# Compile the code:  ./docker-build.sh   (mounts the repo, builds into ./build_docker)
+FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -20,8 +18,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libconfig++-dev \
         libsctp-dev \
         libzmq3-dev \
+        libpcsclite-dev \
         libuhd-dev \
         uhd-host \
+        iputils-ping \
+        iproute2 \
         ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
