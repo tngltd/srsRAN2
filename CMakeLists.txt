@@ -547,7 +547,7 @@ if(NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0)
   # issues but demote these known categories back to warnings so the build
   # succeeds on modern toolchains.
   if(CMAKE_C_COMPILER_ID MATCHES "GNU" AND NOT CMAKE_C_COMPILER_VERSION VERSION_LESS 12.0)
-    set(RELAX_WARN "-Wno-error=maybe-uninitialized -Wno-error=array-bounds -Wno-error=stringop-overflow -Wno-error=stringop-overread -Wno-error=dangling-pointer -Wno-error=alloc-size-larger-than")
+    set(RELAX_WARN "-Wno-error=maybe-uninitialized -Wno-error=array-bounds -Wno-error=stringop-overflow -Wno-error=stringop-overread -Wno-error=dangling-pointer")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${RELAX_WARN}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${RELAX_WARN}")
   endif()
