@@ -8,6 +8,8 @@
 #ifndef FMT_CORE_H_
 #define FMT_CORE_H_
 
+#include <array>   // std::array (GCC 13+ no longer includes it transitively)
+#include <cstdint> // fixed-width integer types
 #include <cstdio>  // std::FILE
 #include <cstring>
 #include <functional>
