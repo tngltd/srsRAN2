@@ -12,6 +12,17 @@ CFG=/tmp/srscfg
 LOG=/tmp/srslogs
 mkdir -p "$CFG" "$LOG"
 
+# Kill any leftovers from a previous run (stale ZMQ sockets block re-binding).
+for p in srsue srsenb srsepc; do pkill -9 -x "$p" 2>/dev/null; done
+sleep 1
+cleanup() { for p in srsue srsenb srsepc; do pkill -9 -x "$p" 2>/dev/null; done; }
+trap cleanup EXIT
+
+# Bind ZMQ to loopback on high ports so the Codespaces/host port-forwarder
+# doesn't grab them (it auto-forwards 0.0.0.0 listeners).
+ENB_ARGS="fail_on_disconnect=true,tx_port=tcp://127.0.0.1:52000,rx_port=tcp://127.0.0.1:52001,id=enb,base_srate=23.04e6"
+UE_ARGS="tx_port=tcp://127.0.0.1:52001,rx_port=tcp://127.0.0.1:52000,id=ue,base_srate=23.04e6"
+
 # Assemble configs from the in-tree .example files (strips .example). Running each
 # component from $CFG lets the relative references (sib.conf/rr.conf/rb.conf/user_db.csv) resolve.
 cp "$ROOT"/srsenb/enb.conf.example      "$CFG/enb.conf"
@@ -29,15 +40,13 @@ EPC=$!; sleep 3
 
 echo ">> starting srsENB (base station) over ZMQ"
 "$BUILD/srsenb/src/srsenb" "$CFG/enb.conf" \
-  --rf.device_name=zmq \
-  --rf.device_args="fail_on_disconnect=true,tx_port=tcp://*:2000,rx_port=tcp://localhost:2001,id=enb,base_srate=23.04e6" \
+  --rf.device_name=zmq --rf.device_args="$ENB_ARGS" \
   >"$LOG/enb.log" 2>&1 &
 ENB=$!; sleep 5
 
 echo ">> starting srsUE (the phone) over ZMQ"
 "$BUILD/srsue/src/srsue" "$CFG/ue.conf" \
-  --rf.device_name=zmq \
-  --rf.device_args="tx_port=tcp://*:2001,rx_port=tcp://localhost:2000,id=ue,base_srate=23.04e6" \
+  --rf.device_name=zmq --rf.device_args="$UE_ARGS" \
   >"$LOG/ue.log" 2>&1 &
 UE=$!
 
