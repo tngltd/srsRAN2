@@ -1,58 +1,60 @@
-# USRP B210 clone (USB `2500:0023`, EEPROM name "B206i") — notes
+# USRP on shaked-ms-a2 is a LibreSDR (Artix-7 B210/B220 clone) — status & how to finish
 
-The USRP attached to `shaked-ms-a2` is **not a genuine Ettus B210**. It enumerates as
-`2500:0023` with a "Cypress / WestBridge" descriptor and an EEPROM name of **"B206i"**
-(not a real Ettus model). Serial `35D5F67`. It is a **B210 clone**.
+## What the device is (confirmed)
+- USB `2500:0023`, EEPROM name **"B206i"**, serial **35D5F67**.
+- It is a **LibreSDR** — a B210 *clone* built on a Xilinx **Artix-7** FPGA + AD936x,
+  NOT a genuine Ettus B210 (which uses a Spartan-6 and enumerates as `0x0020`).
+- Sold as "LibreSDR B210 Mini / B220 Mini" (XC7A100T+AD9363 or XC7A200T+AD9361).
 
-## What works after patching
+## What works (done + committed)
+Stock UHD 4.8 does not know PID `0x0023`, so it never sees the device. The patched UHD
+(source: `~/uhd-src`, patch: `~/uhd-0x0023-clone.patch`, build: `~/uhd-src/host/build`) makes it
+**discoverable and openable** — `uhd_find_devices` reports `product: B210, serial: 35D5F67`.
+The patch also carries two `#include <cstdint>` fixes UHD 4.8 needs to build on GCC 15.
+The srsRAN build itself is done and the RF-less UE test passes (`./run-zmq-test.sh`).
 
-Stock UHD 4.8 does **not** recognize PID `0x0023` (its B2x0 list only has `0x0020`–`0x0022`),
-so `uhd_find_devices` returns nothing. Patching UHD to add `0x0023` makes it:
-- **discoverable** (`uhd_find_devices` → product B210, serial 35D5F67), and
-- **openable** (the device open path also has its own device list that needs `0x0023`).
-
-The patch is saved on the machine at `/home/shaked/uhd-0x0023-clone.patch` and reproduced
-below. It also includes two `#include <cstdint>` fixes UHD 4.8 needs to build on GCC 15.
-
-Build/install the patched UHD:
-```bash
-cd ~/uhd-src && git apply uhd-0x0023-clone.patch   # (already applied in ~/uhd-src)
-cd host && mkdir -p build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local -DENABLE_PYTHON_API=OFF -DENABLE_PYMOD_UTILS=OFF
-make -j$(nproc)
-# run tools with:  LD_LIBRARY_PATH=~/uhd-src/host/build/lib UHD_IMAGES_DIR=/usr/share/uhd/images ...
+## The blocker (needs physical access)
+The Artix-7 FPGA **will not configure**. On every attempt UHD loads the FX3 firmware, detects
+"B210", starts loading the FPGA bitstream, and then fails:
 ```
-
-## What still does NOT work — the blocker
-
-After discovery+open, UHD loads a stock FPGA image (`usrp_b210_fpga.bin`) and then
-**times out reading register 0** (`AssertionError: accum_timeout < _timeout` on `peek32`).
-This is the classic signature of an **FPGA image that does not match the clone's hardware**.
-Stock Ettus FPGA images (both b200 and b210) do not sync with this board.
-
-**Conclusion:** this clone needs its **vendor's own FPGA image and/or UHD fork** — stock
-UHD + stock images cannot drive it. srsRAN can only use it once UHD can fully bring it up.
-
-Also note: repeated firmware reloads put the FX3 into a bad state (`fx3 is in state 5`);
-recover with a physical **unplug / replug** of the USRP.
-
-## Options
-1. Obtain the clone vendor's UHD fork + FPGA image (whoever supplied the board).
-2. Use a **genuine Ettus B200/B210** — it enumerates as `0x0020` and works with stock UHD.
-3. Test srsUE without RF using `./run-zmq-test.sh` (already verified working).
-
-## The patch
-```diff
---- a/host/lib/usrp/b200/b200_iface.hpp
-+++ b/host/lib/usrp/b200/b200_iface.hpp
-@@ B2XX_PID_TO_PRODUCT
--        B200MINI_PRODUCT_ID, B200MINI)(B205MINI_PRODUCT_ID, B205MINI);
-+        B200MINI_PRODUCT_ID, B200MINI)(B205MINI_PRODUCT_ID, B205MINI)(0x0023, B210);
---- a/host/lib/usrp/b200/b200_impl.hpp   (b200_vid_pid_pairs)
-+   ...append (B200_VENDOR_ID, 0x0023)
---- a/host/lib/usrp/b200/b200_impl.cpp   (b200_impl ctor device lists, both branches)
-+   ...append (vid/B200_VENDOR_ID, 0x0023)
---- GCC 15 build fixes: add #include <cstdint> to
-    host/include/uhd/features/ref_clk_calibration_iface.hpp
-    host/lib/include/uhdlib/usrp/dboard/fbx/fbx_constants.hpp
+Error loading FPGA. FX3 state (5): Unconfigured      # LibreSDR Artix-7 images
+this->peek32(0) ... AssertionError: accum_timeout     # stock Ettus Spartan-6 image
 ```
+I tried **all** community LibreSDR FPGA images over the USB/FX3 path — **all fail identically**:
+| image | size | source | result |
+|-------|------|--------|--------|
+| lmesserStep (XC7A75T/100T) | 2.9 MB | github.com/lmesserStep/LibreSDRB210 | Unconfigured |
+| alphafox02 / NustyFrozen (XC7A200T) | 4.3 MB | github.com/alphafox02/LibreSDR_USRP | Unconfigured |
+| bkerler (XC7A200T) | 4.66 MB | github.com/bkerler/LibreSDR_UHD_B220_Mini_FPGA | Unconfigured |
+
+All three are staged at `~/libresdr-images/` on the box.
+
+Because *every* image fails at the config step (not just one), the USB-load path isn't working on
+this board. The most likely reasons, both requiring **hands on the hardware**:
+1. **The FPGA must be flashed to its onboard SPI/QSPI flash via JTAG** (Vivado / openFPGALoader +
+   a JTAG probe), after which it self-configures at power-on. Some LibreSDR revisions only work
+   this way; the over-USB config path does not.
+2. The board is a variant whose exact bitstream isn't among the three above (identify the Artix-7
+   chip from the silkscreen or JTAG IDCODE, then use the matching image).
+Also: the FX3 cannot be power-cycled remotely (the machine's USB hubs don't support per-port power
+switching), and a clean physical **unplug/replug** is advisable before the next attempt.
+
+## How to finish (once at the machine)
+1. Read the Artix-7 part number off the chip (e.g. `XC7A100T` / `XC7A200T`) — or where the board
+   was purchased (AliExpress listing / vendor usually links the exact `usrp_b210_fpga.bin`).
+2. Easiest path — flash the FPGA to onboard flash via JTAG with the vendor's/ matching bitstream
+   (openFPGALoader or Vivado). Then power-cycle; the FPGA self-configures.
+3. If USB-load is supported on your revision: `cp <matching>.bin /usr/share/uhd/images/usrp_b210_fpga.bin`
+   then, with the patched UHD:
+   ```
+   LD_LIBRARY_PATH=~/uhd-src/host/build/lib UHD_IMAGES_DIR=/usr/share/uhd/images \
+     ~/uhd-src/host/build/utils/uhd_usrp_probe
+   ```
+   A good result shows RX/TX channels and freq ranges (no "Unconfigured"/"accum_timeout").
+4. To use it from srsRAN, run srsue/srsenb with `LD_LIBRARY_PATH=~/uhd-src/host/build/lib` so it
+   picks up the patched libuhd (or `sudo make install` the patched UHD to /usr/local and prepend it).
+
+## The UHD patch (also at ~/uhd-0x0023-clone.patch)
+Adds PID `0x0023` → B210 to `B2XX_PID_TO_PRODUCT`, `b200_vid_pid_pairs`, and both device lists in
+the `b200_impl` open path; plus `#include <cstdint>` in `ref_clk_calibration_iface.hpp` and
+`fbx_constants.hpp` for GCC 15.
