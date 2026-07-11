@@ -101,5 +101,20 @@ LD_LIBRARY_PATH=~/uhd-src/host/build/lib UHD_IMAGES_DIR=/usr/share/uhd/images \
   for the wrong chip variant.
 - **BLOCKED pending the exact FPGA chip variant.** Images tried cover XC7A75T-ish (2.9 MB) and
   XC7A200T-ish (4.3/4.66 MB). Need to know the actual chip (e.g. XC7A35T/50T/100T/200T) to fetch
-  the matching bitstream. This requires reading the Xilinx part number off the board, or the
-  vendor/purchase source. Requested from operator.
+  the matching bitstream. Operator could not read the chip marking.
+- 2026-07-11: Found VHAE04 repo → vendor Google-Drive packages (RAR). Extracted the VENDOR's own
+  images + manual. **This board is a Kintex-7 (XC7K325T) clone** ("K7 replacing the original S6",
+  USB3 Type-C, onboard GPS, JTAG on FPC connector). Vendor manual: procedure is just "replace
+  usrp_b210_fpga.bin, run uhd_usrp_probe"; vendor ships/validates on **UHD 4.6.0.0**.
+- Tried the VENDOR's own images via the vendor's exact procedure (swap bin + uhd_usrp_probe AND
+  b2xx -L), on a clean FX3:
+  - vendor Kintex XC7K325T (5.2 MB) → Unconfigured / fx3 state 5
+  - vendor B210mini (2.86 MB) → Unconfigured
+  - vendor B220mini (4.3 MB, == alphafox02) → Unconfigured
+  **All 6 distinct images (community + vendor, Artix + Kintex) fail identically.** → It is NOT an
+  image problem; the FPGA won't configure at all under my patched UHD 4.8 on Linux.
+- Hypothesis: UHD version. Vendor validated on 4.6.0.0; I'm on 4.8. Next: build UHD 4.6 + 0x0023
+  patch, retest the vendor Kintex image. If that also fails → it's platform/hardware and needs
+  JTAG flashing via the FPC connector (physical) or the vendor's Windows+UHD-4.6+WinUSB stack.
+- Staged vendor images at ~/libresdr-images/ (kintex_XC7K325T_5.2MB.bin, vendor_B210mini_2.86MB.bin);
+  vendor packages (RAR) + manual PDF also on the box.
