@@ -92,4 +92,14 @@ LD_LIBRARY_PATH=~/uhd-src/host/build/lib UHD_IMAGES_DIR=/usr/share/uhd/images \
 
 ## Log of ongoing attempts
 - 2026-07-11: created this log. Re-tried all 3 staged images on clean FX3 → all "Unconfigured".
-  Next: RF Swift bundled images.
+- 2026-07-11: RF Swift bundles 2 more images (libresdr_b210.bin/b220.bin) but only inside its
+  Docker container; **no Docker on the box** → can't extract that way. gopher2 repo is Vivado
+  source only (no .bin).
+- Key reframing: a B2x0 (incl. clones) loads its FPGA **volatile over USB every boot** (no onboard
+  bitstream flash). So this is an **image-matching problem**, not a flash problem — the correct
+  bitstream for this board's exact Artix-7 chip *will* configure over USB. All 3 tried images are
+  for the wrong chip variant.
+- **BLOCKED pending the exact FPGA chip variant.** Images tried cover XC7A75T-ish (2.9 MB) and
+  XC7A200T-ish (4.3/4.66 MB). Need to know the actual chip (e.g. XC7A35T/50T/100T/200T) to fetch
+  the matching bitstream. This requires reading the Xilinx part number off the board, or the
+  vendor/purchase source. Requested from operator.
