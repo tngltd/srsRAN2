@@ -118,3 +118,33 @@ LD_LIBRARY_PATH=~/uhd-src/host/build/lib UHD_IMAGES_DIR=/usr/share/uhd/images \
   JTAG flashing via the FPC connector (physical) or the vendor's Windows+UHD-4.6+WinUSB stack.
 - Staged vendor images at ~/libresdr-images/ (kintex_XC7K325T_5.2MB.bin, vendor_B210mini_2.86MB.bin);
   vendor packages (RAR) + manual PDF also on the box.
+- 2026-07-11 (decisive): diffed UHD 4.6 vs 4.8 `b200_iface.cpp` — the FPGA-config logic
+  (`load_fpga`) is **byte-identical** (whole file differs by 6 trivial lines). **UHD version cannot
+  affect FPGA configuration** → building 4.6 is pointless (also 4.6 needs a large Boost-1.88
+  migration: io_service→io_context done, then resolver::query / address_v4::to_ulong removed, etc.).
+  **Abandoned the UHD-4.6 path.**
+
+## CONCLUSION (2026-07-11)
+The FPGA will not accept volatile USB (FX3 slave-serial) configuration on this unit with ANY
+bitstream — 6 distinct images (community + the vendor's own B210mini/B220mini/Kintex), via the
+vendor's exact procedure, on a clean FX3, all fail "Unconfigured". The host-side config code is
+UHD-version-independent, so this is **not** a software/image/UHD-version problem. It is
+board/hardware-level. Remaining possibilities:
+1. The board must be **flashed via JTAG** (the FPC connector, per the vendor manual) to its onboard
+   config storage; the volatile USB-config path this UHD uses does not bring up this board.
+2. A Linux/libusb vs Windows/WinUSB difference in transferring the large (5.2 MB) Kintex bitstream
+   during config (vendor only demonstrated Windows + UHD 4.6 + WinUSB).
+3. A hardware fault or a difference specific to this unit.
+
+### What unblocks it (needs physical action / operator)
+- **JTAG flash** the FPGA with the matching vendor bitstream via the FPC connector
+  (openFPGALoader or Vivado + a JTAG probe). Highest-confidence fix.
+- OR try the vendor's exact stack on **Windows** (their UHD 4.6 + WinUSB driver + matching bin) to
+  confirm the board itself works, isolating Linux/libusb.
+- OR confirm with the seller which image/procedure this exact unit needs.
+
+### What IS ready (so live attach is one step away once RF works)
+- Patched UHD 4.8 (discovers/opens the device): `~/uhd-src/host/build` (run tools/srsue with
+  `LD_LIBRARY_PATH=~/uhd-src/host/build/lib`).
+- srsUE build + PCSC + real Partner SIM (IMSI 425010620050443) all verified.
+- `configs/ue_partner_il.conf` staged (APN uinternet; fill dl_earfcn after cell_search).
