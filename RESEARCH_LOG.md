@@ -143,6 +143,47 @@ board/hardware-level. Remaining possibilities:
   confirm the board itself works, isolating Linux/libusb.
 - OR confirm with the seller which image/procedure this exact unit needs.
 
+## SESSION 2026-07-12 (part 2) — exhaustive "make it work" campaign; blocker = MIB decode / co-channel
+
+Goal: get srsUE to attach to Partner. Result: **could not complete camp/attach**; root causes isolated;
+remaining fixes are physical (frequency reference + antenna/location). What was tried (all failed to attach):
+
+**Confirmed working:** USRP B206mini (UHD 4.9); SIM is a **PARTNER USIM** (read "PARTNER US" from SIM EF_DIR);
+`pdsch_ue` (same PHY lib) cleanly detects/decodes live cells (proves RX + cells are good).
+
+**Diagnosis of the wall:**
+- `pdsch_ue` on band-3 EARFCN 1400: cell present at −24 dBm but **SNR ≈ 0 dB** → interference-limited
+  (three co-channel cells PCI 327/457/308 on the same freq). MIB decodes, SIB1 cannot. srsUE *locks* PCI 308
+  (CFO≈0) but SIB1 never decodes → no attach.
+- Multi-band `cell_search` (bands 1,3,7,20,28): band 20 empty; band 7 weak (−58 dBm); **band 1 EARFCN 324
+  = clean single cell 75 PRB −41/−17 dBm PSR 4.64**; **band 28 (700 MHz) strong (−32..−41 dBm)** with some
+  single cells (9362 25PRB, 9460 50PRB, 9462 25PRB). pdsch_ue confirms 324 is clean & decodable.
+- On the CLEAN cells (324, band-28), **srsUE cell search fails to camp**: either garbage MIB
+  (PCI correct but PRB=125/150/15/25 wrong, FDD↔TDD flipped, CFO −4..−6 kHz) or searches without locking.
+
+**Everything tried on the clean cells (none produced a camp/SIB1/PLMN):**
+gains 10/20/40/50/65 + AGC; master_clock 23.04 / 30.72 / 61.44 (matched per-PRB for clean decimation);
+`phy.cfo_integer_enabled`; `rf.freq_offset ±4100`; reverted the fork's `ue_sync.c` SSS-in-track change;
+reverted to **stock** `ue_cell_search.c` + `rf_utils.c` (rebuilt srsue) — **still garbage MIB**. So it is
+NOT the fork's code. (Also patched `rf_uhd_imp.cc` 4*freq→2*freq earlier so wide cells don't demand >61.44 MHz.)
+
+**Conclusion — two independent RF/hardware blockers, not software:**
+1. The strong band-3 cell is **co-channel-jammed** (SNR≈0) → uncampable.
+2. On the clean cells, srsUE's **MIB/PBCH decode is corrupted** (CFO/timing) while pdsch_ue (fewer-frame,
+   robust CFO correction) succeeds — consistent with the B206mini's **TCXO frequency instability (no GPSDO)**.
+
+**Physical fixes that should make it work (need on-site action):**
+- **Add a frequency reference** — the B206mini-i has a **10 MHz/PPS input and onboard GPS**. Feed a 10 MHz
+  ref or a GPS antenna (GPSDO) so the clock is disciplined. This is the standard fix for B200-family
+  cell-search/MIB instability and directly matches the CFO symptoms. **Highest-value fix.**
+- **Directional / higher-gain antenna + better placement** — to break the co-channel tie (make one cell
+  dominate → SNR up) and strengthen the clean cells.
+- With a stable clock, best target is the clean single cell: **band 1 EARFCN 324** (or band 28 700 MHz
+  cells), `rx_gain ~40`, master 23.04 (324 is 75 PRB), `mode=pcsc`, `apn=uinternet`.
+
+Diagnostic tools left on the box: `pdsch_ue` and `cell_search` in build/lib/examples; `scan_bands.log`,
+`attach_loop.sh`/logs in ~/srsRAN-project/.
+
 ### What IS ready (so live attach is one step away once RF works)
 - Patched UHD 4.8 (discovers/opens the device): `~/uhd-src/host/build` (run tools/srsue with
   `LD_LIBRARY_PATH=~/uhd-src/host/build/lib`).
