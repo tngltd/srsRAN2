@@ -148,3 +148,45 @@ board/hardware-level. Remaining possibilities:
   `LD_LIBRARY_PATH=~/uhd-src/host/build/lib`).
 - srsUE build + PCSC + real Partner SIM (IMSI 425010620050443) all verified.
 - `configs/ue_partner_il.conf` staged (APN uinternet; fill dl_earfcn after cell_search).
+
+---
+
+## SESSION 2026-07-12 — USRP RESOLVED; UE running on live network; blocked on RX signal
+
+### CORRECTION: it is a GENUINE Ettus USRP B206mini-i (NOT a clone)
+Employer (Michael) confirmed + Ettus product page + UHD changelog confirm: genuine **B206mini-i**
+(Spartan-6 XC6SLX150, 1x1, USB-C). USB PID `0x0023` = B206MINI, added in **UHD 4.9.0+** only. My
+earlier "clone" verdict was WRONG — `0x0023`/"B206i" web-searches surfaced LibreSDR clones that copy
+the same PID/name (red herring), and I'd only tried older UHD 4.6, never newer 4.9.
+
+### Fix applied (all done, working)
+- Built **UHD 4.9.0** from source on the box (`~/uhd49`, clean on GCC15/Boost1.88, python off),
+  `sudo make install` → /usr/local, images → /usr/local/share/uhd/images. No 0x0023 patch needed.
+- `uhd_usrp_probe` now natively detects **B206mini**, loads `usrp_b205mini_fpga.bin`, brings up
+  RX/TX 50–6000 MHz. USRP fully works.
+- **Rebuilt srsRAN against UHD 4.9** (`rm build; cmake -DCMAKE_PREFIX_PATH=/usr/local`); srsue links
+  `libuhd.so.4.9.0`.
+- **Patched srsRAN** `lib/src/phy/rf/rf_uhd_imp.cc`: `4 * freq` → `2 * freq` (lines 1012/1064) so the
+  dynamic master-clock never exceeds the B206's 61.44 MHz max (was requesting invalid 92.16 MHz for
+  the 100-PRB cell). Rebuilt srsue.
+- CPU governor set to `performance`.
+- `configs/ue_partner_il.conf`: `device_args=type=b200,master_clock_rate=30.72e6`, `rx_gain=50`,
+  `mode=pcsc`, `apn=uinternet`, `dl_earfcn=1400`.
+
+### Live-network result
+- `cell_search -b 3` found MANY live Band-3 cells (RF receive works). Strongest: EARFCN **1400**
+  (1825 MHz), 100 PRB, PSS ≈ −38 dBm (two co-channel cells: PCI 308 2-port + PCI 327 4-port).
+- srsUE **synchronizes to the live cell** (PCI 308, FDD, 100 PRB, CFO ≈ 0.0 kHz) — PSS/SSS/MIB decode.
+- **BUT it does not complete SIB1 acquisition / attach.** Cell detection is *intermittent*: identical
+  config finds the cell on some runs, nothing on others. Tried rx_gain 40/50/60/65 + AGC, master
+  23.04/30.72/61.44 — all inconsistent. Not CPU/overflow (governor=performance, ~2 overflows only).
+
+### Remaining blocker = marginal / intermittent RX signal (PHYSICAL)
+The whole chain works up to cell sync on the live Partner network; the gap is RX signal quality for
+SIB1/attach. Software levers are exhausted. Needs on-site action:
+1. Proper **1800 MHz-capable cellular antenna** on the RX2 port (srsUE's default RX), well placed
+   (window / closer to a Partner cell / directional). Current reception only intermittently locks.
+2. EARFCN 1400 has two co-channel cells → try a **stronger single-cell EARFCN** (re-scan and pick a
+   clean one), ideally ≤75 PRB (avoids the widest-BW master-clock edge case entirely).
+3. Then: `sudo srsue configs/ue_partner_il.conf` → watch for "Found PLMN" (expect 42501 = Partner)
+   → RACH → "Network attach successful".
