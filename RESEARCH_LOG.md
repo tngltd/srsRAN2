@@ -231,3 +231,15 @@ SIB1/attach. Software levers are exhausted. Needs on-site action:
    clean one), ideally ≤75 PRB (avoids the widest-BW master-clock edge case entirely).
 3. Then: `sudo srsue configs/ue_partner_il.conf` → watch for "Found PLMN" (expect 42501 = Partner)
    → RACH → "Network attach successful".
+
+## SESSION 2026-07-16 — DEFINITIVE verdict run (Roy's "it's sync, not GPS" hypothesis)
+Ran the plan to a certain answer. Measurements (not guesses):
+- **RF degraded vs prior session** (likely antenna/placement changed): band 28 (700 MHz) = 0 cells even at high gain; band 1 (2100) = weak PSS, no MIB; band 3 (1800) = only receivable band, and only at gain ~60, intermittent. Pattern (1800 ok, 700 dead) = current antenna favors ~1800 MHz / is not the broadband one used before.
+- **pdsch_ue on strongest cell (band3 EARFCN 1400, 1825 MHz, gain 60):** locks with **CFO = +462 Hz, stable**; **SNR = +1.9 dB**; PDCCH-miss 28%. i.e. clock/CFO is already fine; the limiter is SNR/interference (1400 is a 3-way co-channel cluster).
+- **srsUE on 1400:** RRC starts cell search; PHY cycles SEARCH→SYNC but **cannot decode MIB** at ~2 dB SNR and falls back (matches pdsch_ue barely decoding). So srsUE finds the cell but SNR is too low to camp.
+
+### VERDICT (sure, evidence-backed)
+1. **A GPSDO / better clock will NOT fix this** — measured CFO is already tiny and tracked; the clock is not the bottleneck. (Confirms Roy: not a GPS problem.)
+2. **The blocker is RF signal quality (SNR ~2 dB) + degraded reception** — the only receivable Partner cell right now is a co-channel cluster below the SNR needed to decode SIB1/attach; and 700 MHz is not received at all (antenna).
+3. **Fix is physical/RF, not clock/software:** a proper broadband + ideally **directional** antenna (to raise SNR and reject the co-channel interferers / isolate a single clean cell), and restoring the reception that existed before (verify the antenna and location). Roy's "enable sync in srs" isn't the gap — sync/CFO already works; signal quality is the gap.
+4. Full srsUE *attach* yes/no cannot be closed tonight because no clean, decodable cell is receivable with the current antenna — that prerequisite is physical.
