@@ -542,10 +542,14 @@ endif()
 if(NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-  # GCC 13+ false positives in SIMD / stl (turbo decoder, phy_common, rrc, dyn_array resize/copy)
-  if(CMAKE_C_COMPILER_ID MATCHES "GNU")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-maybe-uninitialized -Wno-array-bounds -Wno-stringop-overflow -Wno-stringop-overread")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized -Wno-array-bounds -Wno-stringop-overflow -Wno-stringop-overread")
+  # GCC 12+ (Ubuntu 22.04/24.04) raises false-positive warnings on this
+  # 2021-era codebase (turbo decoder, memcpy bounds). Keep -Werror for real
+  # issues but demote these known categories back to warnings so the build
+  # succeeds on modern toolchains.
+  if(CMAKE_C_COMPILER_ID MATCHES "GNU" AND NOT CMAKE_C_COMPILER_VERSION VERSION_LESS 12.0)
+    set(RELAX_WARN "-Wno-error=maybe-uninitialized -Wno-error=array-bounds -Wno-error=stringop-overflow -Wno-error=stringop-overread -Wno-error=dangling-pointer -Wno-error=nonnull")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${RELAX_WARN}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${RELAX_WARN}")
   endif()
 endif()
 
