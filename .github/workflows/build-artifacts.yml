@@ -1,0 +1,134 @@
+name: Build (B206mini artifacts)
+
+# Builds srsRAN on every pull request and publishes the compiled binary as an
+# artifact. The build runs inside an ubuntu:25.10 container and links against a
+# from-source UHD 4.9, so the resulting binary is a drop-in match for the
+# deployment box (Ubuntu 25.10 / glibc 2.42 / Boost 1.88 / UHD 4.9 in
+# /usr/local). The job fails if the build fails; the artifact is only published
+# on a successful build.
+#
+# Why a container and not a stock runner: GitHub runners are Ubuntu 24.04
+# (glibc 2.39, Boost 1.83). A binary built there would link libboost_*.so.1.83
+# and never resolve on the box, which ships Boost 1.88. ubuntu:25.10 matches the
+# box's glibc, libstdc++ and Boost sonames exactly.
+#
+# Why UHD from source: Ubuntu 25.10's apt ships UHD 4.8, but the Ettus B206mini
+# is only recognised by UHD >= 4.9, and the box runs UHD 4.9 (libuhd.so.4.9.0)
+# from source in /usr/local. We build the same 4.9 to /usr/local so srsue's
+# DT_NEEDED is libuhd.so.4.9.0, which the box resolves via ldconfig.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:25.10
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      # UHD 4.9.0 release. Soname libuhd.so.4.9.0 == what the box exposes
+      # (box runs 4.9.0.HEAD-0-g006d7f76, same 4.9.0 ABI/soname).
+      UHD_TAG: v4.9.0.0
+    steps:
+      - name: Install toolchain and dependencies
+        run: |
+          set -eux
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            build-essential g++ cmake git ca-certificates curl tar xz-utils \
+            pkg-config patchelf file binutils \
+            libfftw3-dev libmbedtls-dev libsctp-dev libpcsclite-dev \
+            libboost-program-options-dev libboost-system-dev libboost-thread-dev \
+            libboost-chrono-dev libboost-filesystem-dev libboost-serialization-dev \
+            libboost-test-dev libboost-dev \
+            libconfig++-dev libzmq3-dev libusb-1.0-0-dev \
+            python3 python3-mako python3-numpy python3-requests
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache UHD 4.9 (/usr/local)
+        id: uhd-cache
+        uses: actions/cache@v4
+        with:
+          path: /usr/local
+          key: uhd-${{ env.UHD_TAG }}-ubuntu2510-x86_64-v1
+
+      - name: Build UHD 4.9 from source (to /usr/local, matching the box)
+        if: steps.uhd-cache.outputs.cache-hit != 'true'
+        run: |
+          set -eux
+          git clone --depth 1 --branch "$UHD_TAG" \
+            https://github.com/EttusResearch/uhd.git /tmp/uhd
+          cmake -S /tmp/uhd/host -B /tmp/uhd/host/build \
+            -DCMAKE_INSTALL_PREFIX=/usr/local \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DENABLE_PYTHON_API=OFF -DENABLE_EXAMPLES=OFF -DENABLE_TESTS=OFF \
+            -DENABLE_UTILS=ON -DENABLE_MANUAL=OFF -DENABLE_DOXYGEN=OFF \
+            -DENABLE_MAN_PAGES=OFF
+          cmake --build /tmp/uhd/host/build -j"$(nproc)"
+          cmake --install /tmp/uhd/host/build
+
+      - name: Register UHD with the dynamic linker
+        run: |
+          set -eux
+          echo /usr/local/lib > /etc/ld.so.conf.d/usrlocal.conf
+          ldconfig
+          test -f /usr/local/lib/libuhd.so.4.9.0
+
+      - name: Configure srsRAN
+        run: |
+          set -eux
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH=/usr/local \
+            -DENABLE_UHD=ON -DENABLE_ZEROMQ=ON
+          # A binary without the USRP driver is useless on the box: hard-fail
+          # here rather than silently ship an RF-less build.
+          grep -q "RF_FOUND:INTERNAL=TRUE" build/CMakeCache.txt
+
+      - name: Build srsue (fails the job on any build error)
+        run: cmake --build build -j"$(nproc)" --target srsue
+
+      - name: Assemble relocatable artifact
+        run: |
+          set -eux
+          OUT=srsran-srsue-b206mini-linux-x86_64
+          mkdir -p "$OUT"
+          cp build/srsue/src/srsue "$OUT"/
+          # srsRAN's only dynamic in-tree dependency; ship it beside the binary.
+          cp -a build/lib/src/phy/rf/libsrsran_rf.so* "$OUT"/
+          # Find libsrsran_rf.so.0 next to the binary on the box; UHD/Boost/etc.
+          # resolve from the box's system libraries (all present).
+          patchelf --set-rpath '$ORIGIN' "$OUT/srsue"
+          {
+            echo "srsue build"
+            echo "  commit:      ${GITHUB_SHA}"
+            echo "  built:       $(date -u +%FT%TZ)"
+            echo "  environment: ubuntu:25.10 container, UHD ${UHD_TAG}"
+            echo
+            echo "Deploy: extract the folder and run ./srsue from inside it."
+            echo "Box prerequisites (already satisfied on the deployment box):"
+            echo "  - UHD 4.9 (libuhd.so.4.9.0) in /usr/local/lib"
+            echo "  - UHD FPGA images in /usr/local/share/uhd/images"
+            echo
+            echo "srsue DT_NEEDED:"
+            readelf -d "$OUT/srsue" | grep -E "NEEDED|RUNPATH|RPATH" || true
+          } > "$OUT/BUILD_INFO.txt"
+          tar -czf "$OUT.tar.gz" "$OUT"
+          echo "--- artifact contents ---"; ls -la "$OUT"
+          echo "--- BUILD_INFO ---"; cat "$OUT/BUILD_INFO.txt"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: srsran-srsue-b206mini-linux-x86_64
+          path: srsran-srsue-b206mini-linux-x86_64.tar.gz
+          if-no-files-found: error
+          retention-days: 30
