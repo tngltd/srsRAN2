@@ -358,6 +358,7 @@ private:
   cell_safe cell;
 
   bool                                        force_camping_sfn_sync = false;
+  std::atomic<bool>                           radio_reconfiguring{false};
   uint32_t                                    tti                    = 0;
   srsran_timestamp_t                          stack_tti_ts_new       = {};
   srsran_timestamp_t                          stack_tti_ts           = {};

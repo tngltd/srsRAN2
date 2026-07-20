@@ -648,6 +648,7 @@ void sync::run_camping_state()
 
 void sync::run_idle_state()
 {
+  if (radio_reconfiguring.load()) { usleep(1000); return; }
   if (radio_h->is_init()) {
     uint32_t nsamples = 1920;
     if (srate.is_normal()) {
@@ -938,8 +939,11 @@ void sync::set_sampling_rate()
 
   srate.set_camp(new_srate);
   Info("SYNC:  Setting sampling rate %.2f MHz", new_srate / 1000000);
+  radio_reconfiguring.store(true);
+  usleep(5000);
   radio_h->set_rx_srate(new_srate);
   radio_h->set_tx_srate(new_srate);
+  radio_reconfiguring.store(false);
 }
 
 uint32_t sync::get_current_tti()

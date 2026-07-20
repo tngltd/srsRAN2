@@ -64,7 +64,7 @@ void search::init(srsran::rf_buffer_t& buffer_, uint32_t nof_rx_channels, search
   if (srsran_ue_cellsearch_init_multi(&cs, 8, radio_recv_callback, nof_rx_channels, parent)) {
     Error("SYNC:  Initiating UE cell search");
   }
-  srsran_ue_cellsearch_set_nof_valid_frames(&cs, 4);
+  srsran_ue_cellsearch_set_nof_valid_frames(&cs, 2);
 
   if (srsran_ue_mib_sync_init_multi(&ue_mib_sync, radio_recv_callback, nof_rx_channels, parent)) {
     Error("SYNC:  Initiating UE MIB synchronization");
@@ -159,7 +159,7 @@ search::ret_code search::run(srsran_cell_t* cell_, std::array<uint8_t, SRSRAN_BC
 
   /* Find and decode MIB */
   int sfn_offset;
-  ret = srsran_ue_mib_sync_decode(&ue_mib_sync, 40, bch_payload.data(), &new_cell.nof_ports, &sfn_offset);
+  ret = srsran_ue_mib_sync_decode(&ue_mib_sync, 400, bch_payload.data(), &new_cell.nof_ports, &sfn_offset);
   if (ret == 1) {
     srsran_pbch_mib_unpack(bch_payload.data(), &new_cell, NULL);
     // pack MIB and store inplace for PCAP dump

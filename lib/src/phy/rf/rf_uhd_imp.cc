@@ -79,8 +79,7 @@ const std::set<std::string> RH_UHD_IMP_FIX_MASTER_CLOCK_RATE_DEVICE_LIST = {"x30
  */
 const std::set<std::string> RF_UHD_IMP_PROHIBITED_STREAM_REMAKE = {DEVNAME_X300,
                                                                    DEVNAME_N300,
-                                                                   DEVNAME_E3X0,
-                                                                   DEVNAME_B200};
+                                                                   DEVNAME_E3X0};
 
 /**
  * List of devices that do NOT support end of burst flushing
@@ -90,7 +89,7 @@ const std::set<std::string> RF_UHD_IMP_PROHIBITED_EOB_FLUSH = {DEVNAME_X300, DEV
 /**
  * List of devices that do NOT require/support to restart streaming after rate changes/timeouts
  */
-const std::set<std::string> RF_UHD_IMP_PROHIBITED_STOP_START = {DEVNAME_B200};
+const std::set<std::string> RF_UHD_IMP_PROHIBITED_STOP_START = {};
 
 /**
  * List of devices that work better if timespec is sent at the start of the burst only
@@ -1009,7 +1008,7 @@ double rf_uhd_set_rx_srate(void* h, double freq)
 
   // Set master clock rate
   if (fmod(handler->current_master_clock, freq) > 0.0) {
-    rf_uhd_set_master_clock_rate_nolock(handler, 4 * freq);
+    rf_uhd_set_master_clock_rate_nolock(handler, 2 * freq);
   }
 
   if (handler->nof_rx_channels > 1) {
@@ -1061,7 +1060,7 @@ double rf_uhd_set_tx_srate(void* h, double freq)
 
   // Set master clock rate
   if (fmod(handler->current_master_clock, freq) > 0.0) {
-    rf_uhd_set_master_clock_rate_nolock(handler, 4 * freq);
+    rf_uhd_set_master_clock_rate_nolock(handler, 2 * freq);
   }
 
   if (handler->nof_tx_channels > 1) {
