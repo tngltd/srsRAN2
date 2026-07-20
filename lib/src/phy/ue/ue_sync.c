@@ -294,7 +294,7 @@ int srsran_ue_sync_init_multi_decim_mode(
 
       // Enable SSS on find and disable in track
       srsran_sync_sss_en(&q->sfind, true);
-      srsran_sync_sss_en(&q->strack, true);
+      srsran_sync_sss_en(&q->strack, false);
     }
 
     ret = SRSRAN_SUCCESS;

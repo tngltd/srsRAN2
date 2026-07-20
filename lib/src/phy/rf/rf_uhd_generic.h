@@ -43,6 +43,7 @@ private:
     Debug("Making USRP object with args '" << dev_addr.to_string() << "'");
 
     SRSRAN_UHD_SAFE_C_LOG_ERROR(usrp = uhd::usrp::multi_usrp::make(dev_addr);)
+    if (const char* _rxant = getenv("SRSRAN_RX_ANT")) { try { usrp->set_rx_antenna(std::string(_rxant), 0); } catch (...) {} }
   }
 
   uhd_error set_tx_subdev(const std::string& string)
