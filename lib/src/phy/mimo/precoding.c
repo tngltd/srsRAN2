@@ -62,6 +62,223 @@ int srsran_predecoding_single_avx(cf_t* y[SRSRAN_MAX_PORTS],
 
 static srsran_mimo_decoder_t mimo_decoder = SRSRAN_MIMO_DECODER_MMSE;
 
+/* When enabled, the 2-RX-antenna receiver uses MMSE-IRC (Interference Rejection
+ * Combining) instead of MRC/SFBC-MRC. Selected via --phy.equalizer_mode=irc. */
+static bool irc_enabled = false;
+
+void srsran_predecoding_set_irc(bool enable)
+{
+  irc_enabled = enable;
+}
+
+bool srsran_predecoding_get_irc(void)
+{
+  return irc_enabled;
+}
+
+/* Forward declarations of the standard (MRC/SFBC) combiners used as IRC fallbacks below. */
+int srsran_predecoding_single_gen(cf_t* y[SRSRAN_MAX_PORTS],
+                                  cf_t* h[SRSRAN_MAX_PORTS],
+                                  cf_t* x,
+                                  int   nof_rxant,
+                                  int   nof_symbols,
+                                  float scaling,
+                                  float noise_estimate);
+int srsran_predecoding_diversity_gen(cf_t* y[SRSRAN_MAX_PORTS],
+                                     cf_t* h[SRSRAN_MAX_PORTS][SRSRAN_MAX_PORTS],
+                                     cf_t* x[SRSRAN_MAX_LAYERS],
+                                     int   nof_rxant,
+                                     int   nof_ports,
+                                     int   nof_symbols,
+                                     float scaling);
+
+/* Closed-form inverse of a 2x2 Hermitian interference+noise covariance matrix R.
+ * R is stored row-major with 4 complex entries: R[0]=R00, R[1]=R01, R[2]=R10, R[3]=R11.
+ * R00 and R11 are (real) powers; R01 is the cross-antenna correlation and R10=conj(R01).
+ * Applies diagonal loading if R is close to singular. Returns false (=> caller must
+ * fall back to MRC) if R is not usable (non-positive diagonal). */
+/* Diagnostic/tuning knob: shrink R towards its diagonal before inverting.
+ * 0.0 = pure IRC (use the estimated cross-antenna correlation as-is),
+ * 1.0 = diagonal only, which reduces IRC to per-antenna noise weighting (~MRC).
+ * Set via SRSRAN_IRC_SHRINK; lets the estimate's cross term be de-weighted without
+ * a rebuild, to separate "the combiner is wrong" from "the correlation estimate is wrong". */
+static float irc_shrink(void)
+{
+  static float v    = -1.0f;
+  if (v < 0.0f) {
+    const char* s = getenv("SRSRAN_IRC_SHRINK");
+    v             = s ? strtof(s, NULL) : 0.0f;
+    if (!(v >= 0.0f)) {
+      v = 0.0f;
+    }
+    if (v > 1.0f) {
+      v = 1.0f;
+    }
+  }
+  return v;
+}
+
+static bool mat_2x2_herm_inv(const cf_t R[4], cf_t Rinv[4])
+{
+  float r00 = crealf(R[0]);
+  float r11 = crealf(R[3]);
+  cf_t  r01 = R[1] * (1.0f - irc_shrink());
+
+  if (!(r00 > 0.0f) || !(r11 > 0.0f)) {
+    return false;
+  }
+
+  float off = crealf(r01) * crealf(r01) + cimagf(r01) * cimagf(r01);
+  float det = r00 * r11 - off;
+
+  // Diagonal loading to keep the inverse well-conditioned under high correlation
+  float trace = r00 + r11;
+  float floor = 1e-6f * trace * trace;
+  if (det < floor) {
+    float load = 0.1f * trace + 1e-9f;
+    r00 += load;
+    r11 += load;
+    det = r00 * r11 - off;
+    if (det < 1e-30f) {
+      return false;
+    }
+  }
+
+  float inv_det = 1.0f / det;
+  Rinv[0] = r11 * inv_det;             // (R^-1)00 (real)
+  Rinv[3] = r00 * inv_det;             // (R^-1)11 (real)
+  Rinv[1] = -r01 * inv_det;            // (R^-1)01
+  Rinv[2] = -conjf(r01) * inv_det;     // (R^-1)10
+  return true;
+}
+
+/* MMSE-IRC SISO/single-layer combiner for 2 RX antennas.
+ * x = (h^H R^-1 y) / ((h^H R^-1 h) * scaling), which whitens spatially-correlated
+ * interference before maximal-ratio combining (N antennas can null N-1 interferers). */
+int srsran_predecoding_single_irc(cf_t* y[SRSRAN_MAX_PORTS],
+                                  cf_t* h[SRSRAN_MAX_PORTS],
+                                  cf_t* x,
+                                  int   nof_rxant,
+                                  int   nof_symbols,
+                                  float scaling,
+                                  const cf_t R[4])
+{
+  cf_t Rinv[4];
+  if (nof_rxant != 2 || !mat_2x2_herm_inv(R, Rinv)) {
+    // Fall back to MRC. Use the average of the diagonal of R as white-noise estimate.
+    float ne = (nof_rxant == 2) ? 0.5f * (crealf(R[0]) + crealf(R[3])) : 0.0f;
+    return srsran_predecoding_single_gen(y, h, x, nof_rxant, nof_symbols, scaling, ne);
+  }
+
+  for (int i = 0; i < nof_symbols; i++) {
+    cf_t h0 = h[0][i], h1 = h[1][i];
+    cf_t y0 = y[0][i], y1 = y[1][i];
+
+    // g = R^-1 y
+    cf_t g0 = Rinv[0] * y0 + Rinv[1] * y1;
+    cf_t g1 = Rinv[2] * y0 + Rinv[3] * y1;
+    cf_t num = conjf(h0) * g0 + conjf(h1) * g1; // h^H R^-1 y
+
+    // f = R^-1 h
+    cf_t  f0  = Rinv[0] * h0 + Rinv[1] * h1;
+    cf_t  f1  = Rinv[2] * h0 + Rinv[3] * h1;
+    float den = crealf(conjf(h0) * f0 + conjf(h1) * f1); // h^H R^-1 h (real, >=0)
+    if (den < 1e-9f) {
+      den = 1e-9f;
+    }
+    x[i] = num / (den * scaling);
+  }
+  return nof_symbols;
+}
+
+/* MMSE-IRC SFBC (Alamouti transmit-diversity) combiner for 2 TX ports and 2 RX antennas.
+ * Generalises the standard SFBC-MRC combiner by replacing every antenna-domain inner
+ * product a^H b with the whitened product a^H R^-1 b. This is the path actually used by
+ * PDCCH/PDSCH on a 2-antenna-port (Ports=2) cell. */
+int srsran_predecoding_diversity2_irc(cf_t* y[SRSRAN_MAX_PORTS],
+                                      cf_t* h[SRSRAN_MAX_PORTS][SRSRAN_MAX_PORTS],
+                                      cf_t* x[SRSRAN_MAX_LAYERS],
+                                      int   nof_rxant,
+                                      int   nof_symbols,
+                                      float scaling,
+                                      const cf_t R[4])
+{
+  cf_t Rinv[4];
+  if (nof_rxant != 2 || !mat_2x2_herm_inv(R, Rinv)) {
+    return srsran_predecoding_diversity_gen(y, h, x, nof_rxant, 2, nof_symbols, scaling);
+  }
+
+  int i;
+  for (i = 0; i < nof_symbols / 2; i++) {
+    // Channel estimates at time 2i (assumed ~constant over the RE pair): port p -> antenna a
+    cf_t h0a0 = h[0][0][2 * i], h0a1 = h[0][1][2 * i]; // port 0 -> ant 0, ant 1
+    cf_t h1a0 = h[1][0][2 * i], h1a1 = h[1][1][2 * i]; // port 1 -> ant 0, ant 1
+
+    // Received samples: [ant0; ant1] at time 2i (r0) and 2i+1 (r1)
+    cf_t r0a0 = y[0][2 * i], r0a1 = y[1][2 * i];
+    cf_t r1a0 = y[0][2 * i + 1], r1a1 = y[1][2 * i + 1];
+
+    // R^-1 * r0 and R^-1 * r1 (whiten received vectors across antennas)
+    cf_t g0_0 = Rinv[0] * r0a0 + Rinv[1] * r0a1;
+    cf_t g0_1 = Rinv[2] * r0a0 + Rinv[3] * r0a1;
+    cf_t g1_0 = Rinv[0] * r1a0 + Rinv[1] * r1a1;
+    cf_t g1_1 = Rinv[2] * r1a0 + Rinv[3] * r1a1;
+
+    // Whitened inner products h_p^H R^-1 r_t
+    cf_t h0Hr0 = conjf(h0a0) * g0_0 + conjf(h0a1) * g0_1;
+    cf_t h1Hr0 = conjf(h1a0) * g0_0 + conjf(h1a1) * g0_1;
+    cf_t h0Hr1 = conjf(h0a0) * g1_0 + conjf(h0a1) * g1_1;
+    cf_t h1Hr1 = conjf(h1a0) * g1_0 + conjf(h1a1) * g1_1;
+
+    // Alamouti decision variables (IRC generalisation of the MRC combiner)
+    cf_t x0 = h0Hr0 + conjf(h1Hr1);
+    cf_t x1 = -conjf(h1Hr0) + h0Hr1;
+
+    // Effective (whitened) channel gain: h0^H R^-1 h0 + h1^H R^-1 h1
+    cf_t  fh0_0 = Rinv[0] * h0a0 + Rinv[1] * h0a1;
+    cf_t  fh0_1 = Rinv[2] * h0a0 + Rinv[3] * h0a1;
+    cf_t  fh1_0 = Rinv[0] * h1a0 + Rinv[1] * h1a1;
+    cf_t  fh1_1 = Rinv[2] * h1a0 + Rinv[3] * h1a1;
+    float hh    = crealf(conjf(h0a0) * fh0_0 + conjf(h0a1) * fh0_1 + conjf(h1a0) * fh1_0 + conjf(h1a1) * fh1_1);
+    if (hh < 1e-9f) {
+      hh = 1e-9f;
+    }
+    hh *= scaling;
+
+    x[0][i] = x0 / hh * M_SQRT2;
+    x[1][i] = x1 / hh * M_SQRT2;
+  }
+  return i;
+}
+
+/* Multi-antenna wrappers matching the standard predecoding entry points, used when IRC is enabled. */
+int srsran_predecoding_single_multi_irc(cf_t*      y[SRSRAN_MAX_PORTS],
+                                        cf_t*      h[SRSRAN_MAX_PORTS],
+                                        cf_t*      x,
+                                        int        nof_rxant,
+                                        int        nof_symbols,
+                                        float      scaling,
+                                        const cf_t R[4])
+{
+  return srsran_predecoding_single_irc(y, h, x, nof_rxant, nof_symbols, scaling, R);
+}
+
+int srsran_predecoding_diversity_multi_irc(cf_t*      y[SRSRAN_MAX_PORTS],
+                                           cf_t*      h[SRSRAN_MAX_PORTS][SRSRAN_MAX_PORTS],
+                                           cf_t*      x[SRSRAN_MAX_LAYERS],
+                                           int        nof_rxant,
+                                           int        nof_ports,
+                                           int        nof_symbols,
+                                           float      scaling,
+                                           const cf_t R[4])
+{
+  // IRC-SFBC is implemented for 2 TX ports; other configurations use the standard combiner.
+  if (nof_ports != 2) {
+    return srsran_predecoding_diversity_multi(y, h, x, NULL, nof_rxant, nof_ports, nof_symbols, scaling);
+  }
+  return srsran_predecoding_diversity2_irc(y, h, x, nof_rxant, nof_symbols, scaling, R);
+}
+
 /************************************************
  *
  * RECEIVER SIDE FUNCTIONS
@@ -1923,6 +2140,54 @@ int srsran_predecoding_type(cf_t*              y[SRSRAN_MAX_PORTS],
       ERROR("Invalid Txscheme=%d", type);
       return SRSRAN_ERROR;
   }
+}
+
+/* IRC-aware variant of srsran_predecoding_type. Handles the transmit-diversity (SFBC)
+ * and single-antenna-port schemes with MMSE-IRC; every other scheme (CDD, spatial mux)
+ * falls back to the standard MMSE/ZF predecoder. R is the 2x2 interference+noise
+ * covariance across RX antennas (row-major, 4 complex entries). */
+int srsran_predecoding_type_irc(cf_t*              y[SRSRAN_MAX_PORTS],
+                                cf_t*              h[SRSRAN_MAX_PORTS][SRSRAN_MAX_PORTS],
+                                cf_t*              x[SRSRAN_MAX_LAYERS],
+                                float*             csi[SRSRAN_MAX_CODEWORDS],
+                                int                nof_rxant,
+                                int                nof_ports,
+                                int                nof_layers,
+                                int                codebook_idx,
+                                int                nof_symbols,
+                                srsran_tx_scheme_t type,
+                                float              scaling,
+                                float              noise_estimate,
+                                const cf_t         R[4])
+{
+  switch (type) {
+    case SRSRAN_TXSCHEME_PORT0:
+      if (nof_ports == 1 && nof_layers == 1) {
+        return srsran_predecoding_single_multi_irc(y, h[0], x[0], nof_rxant, nof_symbols, scaling, R);
+      }
+      break;
+    case SRSRAN_TXSCHEME_DIVERSITY:
+      if (nof_ports == nof_layers && nof_ports == 2) {
+        return srsran_predecoding_diversity_multi_irc(y, h, x, nof_rxant, nof_ports, nof_symbols, scaling, R);
+      }
+      break;
+    default:
+      break;
+  }
+
+  // Not an IRC-supported scheme/geometry: use the standard predecoder.
+  return srsran_predecoding_type(y,
+                                 h,
+                                 x,
+                                 csi,
+                                 nof_rxant,
+                                 nof_ports,
+                                 nof_layers,
+                                 codebook_idx,
+                                 nof_symbols,
+                                 type,
+                                 scaling,
+                                 noise_estimate);
 }
 
 /************************************************

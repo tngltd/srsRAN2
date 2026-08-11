@@ -121,6 +121,15 @@ int srsran_chest_dl_init(srsran_chest_dl_t* q, uint32_t max_prb, uint32_t nof_rx
       goto clean_exit;
     }
 
+    // Per-RX-antenna CRS noise+interference residual buffers for MMSE-IRC covariance
+    for (uint32_t i = 0; i < nof_rx_antennas && i < SRSRAN_MAX_PORTS; i++) {
+      q->noise_resid[i] = srsran_vec_cf_malloc(pilot_vec_size);
+      if (!q->noise_resid[i]) {
+        perror("malloc");
+        goto clean_exit;
+      }
+    }
+
     if (srsran_interp_linear_vector_init(&q->srsran_interp_linvec, SRSRAN_NRE * max_prb)) {
       ERROR("Error initializing vector interpolator");
       goto clean_exit;
@@ -197,6 +206,11 @@ void srsran_chest_dl_free(srsran_chest_dl_t* q)
   }
   if (q->pilot_recv_signal) {
     free(q->pilot_recv_signal);
+  }
+  for (uint32_t i = 0; i < SRSRAN_MAX_PORTS; i++) {
+    if (q->noise_resid[i]) {
+      free(q->noise_resid[i]);
+    }
   }
   if (q->wiener_dl) {
     srsran_wiener_dl_free(q->wiener_dl);
@@ -803,6 +817,49 @@ chest_dl_estimate_correct_sync_error(srsran_chest_dl_t* q, srsran_dl_sf_cfg_t* s
   }
 }
 
+/* Power-preserving scale for the residual operator (2*p[k] - p[k-1] - p[k+1])/3.
+ * For i.i.d. noise that operator has gain (4+1+1)/9 = 2/3, so multiply by sqrt(3/2)
+ * to keep the covariance in the same units as the true noise+interference power. */
+#define NOISE_RESID_NORM 1.22474487f
+
+/* Extract the CRS noise+interference residual for MMSE-IRC covariance estimation.
+ * The least-squares CRS estimates q->pilot_estimates[k] = y_k * conj(x_crs_k) contain the
+ * channel plus noise+interference. Subtracting the local 3-pilot mean in frequency leaves a
+ * noise+interference-only sequence, cancelling both a constant and a linear channel across
+ * the pilot triplet. The common conj(x_crs) factor is identical across RX antennas, so the
+ * cross-antenna covariance of the residual equals that of r_p = y_p - h_p x_crs.
+ * Results are stored per RX antenna and combined later into R.
+ * Returns the number of residual samples written to 'out'. */
+static uint32_t estimate_noise_resid(srsran_chest_dl_t* q, srsran_dl_sf_cfg_t* sf, uint32_t port_id, cf_t* out)
+{
+  uint32_t npilots  = srsran_refsignal_cs_nof_re(&q->csr_refs, sf, port_id);
+  uint32_t nsymbols = srsran_refsignal_cs_nof_symbols(&q->csr_refs, sf, port_id);
+  if (nsymbols == 0 || npilots < 2) {
+    return 0;
+  }
+  uint32_t nref = npilots / nsymbols;
+  if (nref < 3) {
+    return 0;
+  }
+  uint32_t count = 0;
+  for (uint32_t s = 0; s < nsymbols; s++) {
+    cf_t* p = &q->pilot_estimates[s * nref];
+    for (uint32_t k = 1; k + 1 < nref; k++) {
+      /* Residual against the local 3-pilot mean: (2*p[k] - p[k-1] - p[k+1])/3.
+       * This cancels a locally CONSTANT AND LINEAR channel, matching how
+       * estimate_noise_pilots() estimates noise upstream. A plain adjacent
+       * difference (p[k]-p[k+1]) only cancels a constant channel; CRS pilots are
+       * 6 subcarriers apart, so on a frequency-selective channel the leftover
+       * channel slope dominates the residual at high SNR. That leftover lies in
+       * the DESIRED signal's spatial direction, so R would point at the signal
+       * subspace and R^-1 would whiten away the wanted signal -- which made IRC
+       * fail completely on clean, high-SNR cells. */
+      out[count++] = (2.0f * p[k] - p[k - 1] - p[k + 1]) * (cf_t)(NOISE_RESID_NORM / 3.0f);
+    }
+  }
+  return count;
+}
+
 static int estimate_port(srsran_chest_dl_t*     q,
                          srsran_dl_sf_cfg_t*    sf,
                          srsran_chest_dl_cfg_t* cfg,
@@ -819,6 +876,12 @@ static int estimate_port(srsran_chest_dl_t*     q,
   /* Use the known CSR signal to compute Least-squares estimates */
   srsran_vec_prod_conj_ccc(
       q->pilot_recv_signal, q->csr_refs.pilots[port_id / 2][sf->tti % 10], q->pilot_estimates, npilots);
+
+  /* For MMSE-IRC: extract the per-antenna CRS noise+interference residual from the
+   * reference port (port 0). Must run before pilot smoothing overwrites the estimates. */
+  if (port_id == 0 && rxant_id < SRSRAN_MAX_PORTS && q->noise_resid[rxant_id]) {
+    q->noise_resid_len = estimate_noise_resid(q, sf, port_id, q->noise_resid[rxant_id]);
+  }
 
   /* Compute RSRP for the channel estimates in this port */
   if (cfg->rsrp_neighbour) {
@@ -959,8 +1022,44 @@ static float get_rsrp_neighbour(srsran_chest_dl_t* q)
   return max;
 }
 
+/* Build the 2x2 interference+noise covariance R across the two RX antennas from the CRS
+ * residuals collected by estimate_noise_resid(). Only meaningful with exactly 2 antennas. */
+static void compute_interf_cov(srsran_chest_dl_t* q, srsran_chest_dl_res_t* res)
+{
+  res->interf_cov_valid = false;
+
+  if (q->nof_rx_antennas != 2 || q->noise_resid_len == 0 || !q->noise_resid[0] || !q->noise_resid[1]) {
+    return;
+  }
+
+  uint32_t n   = q->noise_resid_len;
+  cf_t*    r0  = q->noise_resid[0];
+  cf_t*    r1  = q->noise_resid[1];
+  float    c00 = 0.0f, c11 = 0.0f;
+  cf_t     c01 = 0.0f;
+
+  for (uint32_t i = 0; i < n; i++) {
+    c00 += crealf(r0[i]) * crealf(r0[i]) + cimagf(r0[i]) * cimagf(r0[i]);
+    c11 += crealf(r1[i]) * crealf(r1[i]) + cimagf(r1[i]) * cimagf(r1[i]);
+    c01 += r0[i] * conjf(r1[i]);
+  }
+
+  float inv_n = 1.0f / (float)n;
+  c00 *= inv_n;
+  c11 *= inv_n;
+  c01 *= inv_n;
+
+  res->interf_cov[0][0] = c00;
+  res->interf_cov[1][1] = c11;
+  res->interf_cov[0][1] = c01;
+  res->interf_cov[1][0] = conjf(c01);
+  res->interf_cov_valid = (c00 > 0.0f) && (c11 > 0.0f);
+}
+
 static void fill_res(srsran_chest_dl_t* q, srsran_chest_dl_res_t* res)
 {
+  compute_interf_cov(q, res);
+
   res->noise_estimate     = get_noise(q);
   res->noise_estimate_dbm = srsran_convert_power_to_dBm(res->noise_estimate);
   res->cfo                = q->cfo;

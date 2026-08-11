@@ -865,18 +865,40 @@ int srsran_pdsch_decode(srsran_pdsch_t*        q,
 
     // Pre-decoder
     uint32_t codebook_idx = nof_tb == 1 ? cfg->grant.pmi : (cfg->grant.pmi + 1);
-    if (srsran_predecoding_type(q->symbols,
-                                q->ce,
-                                x,
-                                q->csi,
-                                q->nof_rx_antennas,
-                                q->cell.nof_ports,
-                                cfg->grant.nof_layers,
-                                codebook_idx,
-                                cfg->grant.nof_re,
-                                cfg->grant.tx_scheme,
-                                pdsch_scaling,
-                                noise_estimate) < 0) {
+
+    // Use MMSE-IRC when enabled and a valid 2x2 interference covariance is available
+    bool use_irc = srsran_predecoding_get_irc() && q->nof_rx_antennas == 2 && channel->interf_cov_valid;
+    cf_t R[4]    = {channel->interf_cov[0][0],
+                    channel->interf_cov[0][1],
+                    channel->interf_cov[1][0],
+                    channel->interf_cov[1][1]};
+
+    int predec_ret = use_irc ? srsran_predecoding_type_irc(q->symbols,
+                                                           q->ce,
+                                                           x,
+                                                           q->csi,
+                                                           q->nof_rx_antennas,
+                                                           q->cell.nof_ports,
+                                                           cfg->grant.nof_layers,
+                                                           codebook_idx,
+                                                           cfg->grant.nof_re,
+                                                           cfg->grant.tx_scheme,
+                                                           pdsch_scaling,
+                                                           noise_estimate,
+                                                           R)
+                             : srsran_predecoding_type(q->symbols,
+                                                       q->ce,
+                                                       x,
+                                                       q->csi,
+                                                       q->nof_rx_antennas,
+                                                       q->cell.nof_ports,
+                                                       cfg->grant.nof_layers,
+                                                       codebook_idx,
+                                                       cfg->grant.nof_re,
+                                                       cfg->grant.tx_scheme,
+                                                       pdsch_scaling,
+                                                       noise_estimate);
+    if (predec_ret < 0) {
       ERROR("Error predecoding");
       return SRSRAN_ERROR;
     }

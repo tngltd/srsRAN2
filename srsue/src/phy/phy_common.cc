@@ -106,6 +106,10 @@ void phy_common::set_pdsch_cfg(srsran_pdsch_cfg_t* pdsch_cfg)
   pdsch_cfg->max_nof_iterations = args->pdsch_max_its;
   pdsch_cfg->meas_evm_en        = args->meas_evm;
   pdsch_cfg->decoder_type       = (args->equalizer_mode == "zf") ? SRSRAN_MIMO_DECODER_ZF : SRSRAN_MIMO_DECODER_MMSE;
+
+  // Enable MMSE-IRC (Interference Rejection Combining) for the 2-RX-antenna receiver.
+  // Falls back to MRC/SFBC automatically when nof_rxant != 2 or the covariance is ill-conditioned.
+  srsran_predecoding_set_irc(args->equalizer_mode == "irc");
 }
 
 void phy_common::set_ue_ul_cfg(srsran_ue_ul_cfg_t* ue_ul_cfg)
