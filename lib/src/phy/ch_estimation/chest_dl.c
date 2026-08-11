@@ -817,13 +817,18 @@ chest_dl_estimate_correct_sync_error(srsran_chest_dl_t* q, srsran_dl_sf_cfg_t* s
   }
 }
 
+/* Power-preserving scale for the residual operator (2*p[k] - p[k-1] - p[k+1])/3.
+ * For i.i.d. noise that operator has gain (4+1+1)/9 = 2/3, so multiply by sqrt(3/2)
+ * to keep the covariance in the same units as the true noise+interference power. */
+#define NOISE_RESID_NORM 1.22474487f
+
 /* Extract the CRS noise+interference residual for MMSE-IRC covariance estimation.
  * The least-squares CRS estimates q->pilot_estimates[k] = y_k * conj(x_crs_k) contain the
- * channel plus noise+interference. Differencing adjacent pilots in frequency within each
- * CRS symbol, d(k) = (p(k) - p(k+1))/sqrt(2), cancels the (smooth) channel and leaves a
- * noise+interference-only sequence. The common conj(x_crs) factor is identical across RX
- * antennas, so the cross-antenna covariance of d equals that of the residual r_p = y_p -
- * h_p x_crs. Results are stored per RX antenna and combined later into R.
+ * channel plus noise+interference. Subtracting the local 3-pilot mean in frequency leaves a
+ * noise+interference-only sequence, cancelling both a constant and a linear channel across
+ * the pilot triplet. The common conj(x_crs) factor is identical across RX antennas, so the
+ * cross-antenna covariance of the residual equals that of r_p = y_p - h_p x_crs.
+ * Results are stored per RX antenna and combined later into R.
  * Returns the number of residual samples written to 'out'. */
 static uint32_t estimate_noise_resid(srsran_chest_dl_t* q, srsran_dl_sf_cfg_t* sf, uint32_t port_id, cf_t* out)
 {
@@ -832,12 +837,24 @@ static uint32_t estimate_noise_resid(srsran_chest_dl_t* q, srsran_dl_sf_cfg_t* s
   if (nsymbols == 0 || npilots < 2) {
     return 0;
   }
-  uint32_t nref  = npilots / nsymbols;
+  uint32_t nref = npilots / nsymbols;
+  if (nref < 3) {
+    return 0;
+  }
   uint32_t count = 0;
   for (uint32_t s = 0; s < nsymbols; s++) {
     cf_t* p = &q->pilot_estimates[s * nref];
-    for (uint32_t k = 0; k + 1 < nref; k++) {
-      out[count++] = (p[k] - p[k + 1]) * (cf_t)M_SQRT1_2;
+    for (uint32_t k = 1; k + 1 < nref; k++) {
+      /* Residual against the local 3-pilot mean: (2*p[k] - p[k-1] - p[k+1])/3.
+       * This cancels a locally CONSTANT AND LINEAR channel, matching how
+       * estimate_noise_pilots() estimates noise upstream. A plain adjacent
+       * difference (p[k]-p[k+1]) only cancels a constant channel; CRS pilots are
+       * 6 subcarriers apart, so on a frequency-selective channel the leftover
+       * channel slope dominates the residual at high SNR. That leftover lies in
+       * the DESIRED signal's spatial direction, so R would point at the signal
+       * subspace and R^-1 would whiten away the wanted signal -- which made IRC
+       * fail completely on clean, high-SNR cells. */
+      out[count++] = (2.0f * p[k] - p[k - 1] - p[k + 1]) * (cf_t)(NOISE_RESID_NORM / 3.0f);
     }
   }
   return count;

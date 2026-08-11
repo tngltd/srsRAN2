@@ -97,11 +97,32 @@ int srsran_predecoding_diversity_gen(cf_t* y[SRSRAN_MAX_PORTS],
  * R00 and R11 are (real) powers; R01 is the cross-antenna correlation and R10=conj(R01).
  * Applies diagonal loading if R is close to singular. Returns false (=> caller must
  * fall back to MRC) if R is not usable (non-positive diagonal). */
+/* Diagnostic/tuning knob: shrink R towards its diagonal before inverting.
+ * 0.0 = pure IRC (use the estimated cross-antenna correlation as-is),
+ * 1.0 = diagonal only, which reduces IRC to per-antenna noise weighting (~MRC).
+ * Set via SRSRAN_IRC_SHRINK; lets the estimate's cross term be de-weighted without
+ * a rebuild, to separate "the combiner is wrong" from "the correlation estimate is wrong". */
+static float irc_shrink(void)
+{
+  static float v    = -1.0f;
+  if (v < 0.0f) {
+    const char* s = getenv("SRSRAN_IRC_SHRINK");
+    v             = s ? strtof(s, NULL) : 0.0f;
+    if (!(v >= 0.0f)) {
+      v = 0.0f;
+    }
+    if (v > 1.0f) {
+      v = 1.0f;
+    }
+  }
+  return v;
+}
+
 static bool mat_2x2_herm_inv(const cf_t R[4], cf_t Rinv[4])
 {
   float r00 = crealf(R[0]);
   float r11 = crealf(R[3]);
-  cf_t  r01 = R[1];
+  cf_t  r01 = R[1] * (1.0f - irc_shrink());
 
   if (!(r00 > 0.0f) || !(r11 > 0.0f)) {
     return false;
