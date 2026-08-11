@@ -1,0 +1,10 @@
+
+# Build directories (never commit build output)
+build/
+build_*/
+cmake-build*/
+
+# Crash dumps and local test artefacts
+*.backtrace.crash
+*.pcap
+report_evidence_*/

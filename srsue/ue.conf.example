@@ -314,9 +314,12 @@ enable = false
 # pdsch_max_its:        Maximum number of turbo decoder iterations (Default 4)
 # pdsch_meas_evm:       Measure PDSCH EVM, increases CPU load (default false)
 # nof_phy_threads:      Selects the number of PHY threads (maximum 4, minimum 1, default 3)
-# equalizer_mode:       Selects equalizer mode. Valid modes are: "mmse", "zf" or any 
-#                       non-negative real number to indicate a regularized zf coefficient.
-#                       Default is MMSE.
+# equalizer_mode:       Selects equalizer mode. Valid modes are: "mmse", "zf", "irc", or
+#                       any non-negative real number to indicate a regularized zf coefficient.
+#                       "irc" enables MMSE Interference Rejection Combining, which uses a 2x2
+#                       interference+noise covariance across the two RX antennas to null a
+#                       co-channel interferer (requires 2 RX antennas; falls back to MRC
+#                       otherwise). Default is MMSE.
 # correct_sync_error:   Channel estimator measures and pre-compensates time synchronization error. Increases CPU usage,
 #                       improves PDSCH decoding in high SFO and high speed UE scenarios.
 # sfo_ema:              EMA coefficient to average sample offsets used to compute SFO

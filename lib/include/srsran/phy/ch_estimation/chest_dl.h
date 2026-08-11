@@ -70,6 +70,12 @@ typedef struct SRSRAN_API {
   float    rssi_dbm;
   float    cfo;
   float    sync_error;
+
+  /* CRS-based 2x2 interference+noise covariance across RX antennas, for MMSE-IRC.
+   * interf_cov[a][b] = <r_a r_b^*> over CRS REs; interf_cov_valid is set only when a
+   * usable estimate was produced (2 RX antennas, positive diagonal). */
+  cf_t interf_cov[SRSRAN_MAX_PORTS][SRSRAN_MAX_PORTS];
+  bool interf_cov_valid;
 } srsran_chest_dl_res_t;
 
 // Noise estimation algorithm
@@ -100,6 +106,11 @@ typedef struct SRSRAN_API {
   cf_t* pilot_recv_signal;
   cf_t* tmp_noise;
   cf_t* tmp_cfo_estimate;
+
+  /* Per-RX-antenna CRS noise+interference residuals (reference port), used to build the
+   * 2x2 covariance matrix R for MMSE-IRC. */
+  cf_t*    noise_resid[SRSRAN_MAX_PORTS];
+  uint32_t noise_resid_len;
 
 #ifdef FREQ_SEL_SNR
   float snr_vector[12000];

@@ -102,6 +102,44 @@ SRSRAN_API int srsran_predecoding_diversity_multi(cf_t*  y[SRSRAN_MAX_PORTS],
 
 SRSRAN_API void srsran_predecoding_set_mimo_decoder(srsran_mimo_decoder_t _mimo_decoder);
 
+/* MMSE-IRC (Interference Rejection Combining) support. R is the 2x2 interference+noise
+ * covariance matrix across the two RX antennas, stored row-major as 4 complex entries
+ * (R00, R01, R10, R11). IRC nulls spatially-correlated (co-channel) interference. */
+SRSRAN_API void srsran_predecoding_set_irc(bool enable);
+
+SRSRAN_API bool srsran_predecoding_get_irc(void);
+
+SRSRAN_API int srsran_predecoding_single_multi_irc(cf_t*      y[SRSRAN_MAX_PORTS],
+                                                   cf_t*      h[SRSRAN_MAX_PORTS],
+                                                   cf_t*      x,
+                                                   int        nof_rxant,
+                                                   int        nof_symbols,
+                                                   float      scaling,
+                                                   const cf_t R[4]);
+
+SRSRAN_API int srsran_predecoding_diversity_multi_irc(cf_t*      y[SRSRAN_MAX_PORTS],
+                                                      cf_t*      h[SRSRAN_MAX_PORTS][SRSRAN_MAX_PORTS],
+                                                      cf_t*      x[SRSRAN_MAX_LAYERS],
+                                                      int        nof_rxant,
+                                                      int        nof_ports,
+                                                      int        nof_symbols,
+                                                      float      scaling,
+                                                      const cf_t R[4]);
+
+SRSRAN_API int srsran_predecoding_type_irc(cf_t*              y[SRSRAN_MAX_PORTS],
+                                           cf_t*              h[SRSRAN_MAX_PORTS][SRSRAN_MAX_PORTS],
+                                           cf_t*              x[SRSRAN_MAX_LAYERS],
+                                           float*             csi[SRSRAN_MAX_CODEWORDS],
+                                           int                nof_rxant,
+                                           int                nof_ports,
+                                           int                nof_layers,
+                                           int                codebook_idx,
+                                           int                nof_symbols,
+                                           srsran_tx_scheme_t type,
+                                           float              scaling,
+                                           float              noise_estimate,
+                                           const cf_t         R[4]);
+
 SRSRAN_API int srsran_predecoding_type(cf_t*              y[SRSRAN_MAX_PORTS],
                                        cf_t*              h[SRSRAN_MAX_PORTS][SRSRAN_MAX_PORTS],
                                        cf_t*              x[SRSRAN_MAX_LAYERS],

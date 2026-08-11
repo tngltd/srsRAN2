@@ -489,14 +489,30 @@ int srsran_pdcch_extract_llr(srsran_pdcch_t*        q,
       }
     }
 
+    /* Enable MMSE-IRC only with 2 RX antennas and a valid interference covariance estimate */
+    bool use_irc = srsran_predecoding_get_irc() && q->nof_rx_antennas == 2 && channel->interf_cov_valid;
+    cf_t R[4]    = {channel->interf_cov[0][0],
+                    channel->interf_cov[0][1],
+                    channel->interf_cov[1][0],
+                    channel->interf_cov[1][1]};
+
     /* in control channels, only diversity is supported */
     if (q->cell.nof_ports == 1) {
       /* no need for layer demapping */
-      srsran_predecoding_single_multi(
-          q->symbols, q->ce[0], q->d, NULL, q->nof_rx_antennas, nof_symbols, 1.0f, channel->noise_estimate / 2);
+      if (use_irc) {
+        srsran_predecoding_single_multi_irc(q->symbols, q->ce[0], q->d, q->nof_rx_antennas, nof_symbols, 1.0f, R);
+      } else {
+        srsran_predecoding_single_multi(
+            q->symbols, q->ce[0], q->d, NULL, q->nof_rx_antennas, nof_symbols, 1.0f, channel->noise_estimate / 2);
+      }
     } else {
-      srsran_predecoding_diversity_multi(
-          q->symbols, q->ce, x, NULL, q->nof_rx_antennas, q->cell.nof_ports, nof_symbols, 1.0f);
+      if (use_irc) {
+        srsran_predecoding_diversity_multi_irc(
+            q->symbols, q->ce, x, q->nof_rx_antennas, q->cell.nof_ports, nof_symbols, 1.0f, R);
+      } else {
+        srsran_predecoding_diversity_multi(
+            q->symbols, q->ce, x, NULL, q->nof_rx_antennas, q->cell.nof_ports, nof_symbols, 1.0f);
+      }
       srsran_layerdemap_diversity(x, q->d, q->cell.nof_ports, nof_symbols / q->cell.nof_ports);
     }
 
